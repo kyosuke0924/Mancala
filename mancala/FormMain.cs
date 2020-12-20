@@ -72,6 +72,8 @@ namespace mancala
         {
             if (!isReverse)
             {
+                labelS.Text = "先手";
+                labelN.Text = "後手";
                 storeS.Text = board.GetStore(Turn.First).ToString();
                 storeN.Text = board.GetStore(Turn.Second).ToString();
 
@@ -87,13 +89,21 @@ namespace mancala
             }
             else
             {
+                labelS.Text = "後手";
+                labelN.Text = "先手";
+                storeS.Text = board.GetStore(Turn.Second).ToString();
+                storeN.Text = board.GetStore(Turn.First).ToString();
 
-
-
+                for (int i = 0; i < pits.GetLength(0); i++)
+                {
+                    for (int j = 0; j < pits.GetLength(1); j++)
+                    {
+                        int seedNum = board.GetSeed((Turn)Enum.ToObject(typeof(Turn), i), j);
+                        pits[pits.GetLength(0) -1 - i, j].Text = seedNum > 0 ? seedNum.ToString() : "";
+                        pits[pits.GetLength(0) -1 - i, j].Enabled = (i == (int)board.GetTurn() ? true : false);
+                    }
+                }
             }
-
-
-
         }
 
 
@@ -122,6 +132,12 @@ namespace mancala
         private void ButtonQuit_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void ButtonInversion_Click(object sender, EventArgs e)
+        {
+            isReverse = !isReverse;
+            DisplayBoard();
         }
     }
 

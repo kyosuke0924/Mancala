@@ -53,7 +53,6 @@
             this.buttonUndo = new System.Windows.Forms.Button();
             this.buttonReset = new System.Windows.Forms.Button();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.dataHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel4 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -65,14 +64,16 @@
             this.dataGridViewTextBoxColumn5 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.buttonInversion = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataHistoryBindingSource)).BeginInit();
             this.panel4.SuspendLayout();
             this.panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewHistory)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataHistoryBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -333,6 +334,7 @@
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2.Controls.Add(this.buttonInversion);
             this.panel2.Controls.Add(this.buttonQuit);
             this.panel2.Controls.Add(this.buttonUndo);
             this.panel2.Controls.Add(this.buttonReset);
@@ -355,7 +357,7 @@
             // 
             // buttonUndo
             // 
-            this.buttonUndo.Location = new System.Drawing.Point(128, 12);
+            this.buttonUndo.Location = new System.Drawing.Point(124, 12);
             this.buttonUndo.Name = "buttonUndo";
             this.buttonUndo.Size = new System.Drawing.Size(106, 39);
             this.buttonUndo.TabIndex = 1;
@@ -379,14 +381,10 @@
             this.panel3.Controls.Add(this.panel4);
             this.panel3.Controls.Add(this.panel5);
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel3.Location = new System.Drawing.Point(669, 60);
+            this.panel3.Location = new System.Drawing.Point(675, 60);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(463, 436);
+            this.panel3.Size = new System.Drawing.Size(457, 436);
             this.panel3.TabIndex = 3;
-            // 
-            // dataHistoryBindingSource
-            // 
-            this.dataHistoryBindingSource.DataSource = typeof(mancala.DataHistory);
             // 
             // panel4
             // 
@@ -394,7 +392,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 34);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(459, 398);
+            this.panel4.Size = new System.Drawing.Size(453, 398);
             this.panel4.TabIndex = 8;
             // 
             // panel5
@@ -403,7 +401,7 @@
             this.panel5.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(459, 34);
+            this.panel5.Size = new System.Drawing.Size(453, 34);
             this.panel5.TabIndex = 9;
             // 
             // label1
@@ -453,7 +451,7 @@
             this.dataGridViewHistory.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridViewHistory.RowTemplate.Height = 21;
             this.dataGridViewHistory.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewHistory.Size = new System.Drawing.Size(459, 398);
+            this.dataGridViewHistory.Size = new System.Drawing.Size(453, 398);
             this.dataGridViewHistory.TabIndex = 1;
             // 
             // dataGridViewTextBoxColumn1
@@ -510,6 +508,20 @@
             this.dataGridViewTextBoxColumn7.Name = "dataGridViewTextBoxColumn7";
             this.dataGridViewTextBoxColumn7.ReadOnly = true;
             // 
+            // dataHistoryBindingSource
+            // 
+            this.dataHistoryBindingSource.DataSource = typeof(mancala.DataHistory);
+            // 
+            // buttonInversion
+            // 
+            this.buttonInversion.Location = new System.Drawing.Point(236, 12);
+            this.buttonInversion.Name = "buttonInversion";
+            this.buttonInversion.Size = new System.Drawing.Size(106, 39);
+            this.buttonInversion.TabIndex = 3;
+            this.buttonInversion.Text = "盤面を反転する";
+            this.buttonInversion.UseVisualStyleBackColor = true;
+            this.buttonInversion.Click += new System.EventHandler(this.ButtonInversion_Click);
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -526,11 +538,11 @@
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataHistoryBindingSource)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewHistory)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataHistoryBindingSource)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -579,5 +591,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button buttonInversion;
     }
 }
