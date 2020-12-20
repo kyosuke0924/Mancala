@@ -16,6 +16,7 @@ namespace mancala
         private Board board;
         private readonly Button[,] pits;
         private Boolean isReverse = false;
+        private BindingList<DataHistory> dataHistories;
 
         public FormMain()
         {
@@ -34,13 +35,25 @@ namespace mancala
                     pits[i, j].Click += new EventHandler(Pits_Click);
                 }             
             }
-            Display();
+
+            dataHistories = new BindingList<DataHistory>();
+            dataGridViewHistory.DataSource = dataHistories; 
+            DisplayBoard();
         }
 
         private void Pits_Click(object sender, EventArgs e)
         {
-            board.Play(GetPitIdx((System.Windows.Forms.Button)sender));
-            Display();
+            Turn thisTurn = board.GetTurn();
+            int pitIdx = GetPitIdx((System.Windows.Forms.Button)sender);
+
+            Boolean result = board.Play(pitIdx);
+            DisplayBoard();
+            if (result)
+            {
+                dataHistories.Add(new DataHistory(dataHistories.Count + 1, thisTurn, pitIdx, board.State));
+                dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
+                dataGridViewHistory.FirstDisplayedScrollingRowIndex = dataGridViewHistory.Rows.Count - 1;
+            }
         }
 
         private int GetPitIdx(System.Windows.Forms.Button button)
@@ -55,7 +68,7 @@ namespace mancala
             return -1;
         }
   
-       public void Display()
+       private void DisplayBoard()
         {
             if (!isReverse)
             {
@@ -78,18 +91,32 @@ namespace mancala
 
 
             }
+
+
+
         }
+
 
         private void ButtonReset_Click(object sender, EventArgs e)
         {
             board.Reset();
-            Display();
+            DisplayBoard();
+            dataHistories.Clear();
         }
 
         private void ButtonUndo_Click(object sender, EventArgs e)
         {
-            board.Undo();
-            Display();
+            Boolean result = board.Undo();
+            DisplayBoard();
+            if (result)
+            {
+                dataHistories.RemoveAt(dataHistories.Count - 1);
+                if (dataGridViewHistory.Rows.Count > 0)
+                {
+                    dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
+                    dataGridViewHistory.FirstDisplayedScrollingRowIndex = dataGridViewHistory.Rows.Count - 1;
+                }
+            }
         }
 
         private void ButtonQuit_Click(object sender, EventArgs e)
@@ -98,4 +125,25 @@ namespace mancala
         }
     }
 
+    public class DataHistory
+    {
+        public int No { get; set; }
+        public string Turn { get; set; }
+        public int Hand { get; set; }
+        public int FirstStore { get; set; }
+        public int SecondStore { get; set; }
+        public long FirstBoardState { get; set; }
+        public long SecondBoardState { get; set; }
+
+        public DataHistory(int no, Turn thisTurn, int pidIdx, BoardState boardState)
+        {
+            No = no;
+            Turn = thisTurn == Construct.Turn.First ? "先手" : "後手";
+            Hand = pidIdx;
+            FirstStore = boardState.Stores[(int)Construct.Turn.First];
+            SecondStore = boardState.Stores[(int)Construct.Turn.Second];
+            FirstBoardState = boardState.Seed_states[(int)Construct.Turn.First];
+            SecondBoardState = boardState.Seed_states[(int)Construct.Turn.Second];
+        }
+    }
 }

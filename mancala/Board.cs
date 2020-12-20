@@ -115,13 +115,13 @@ namespace mancala
 
     public class Board
     {
-        private BoardState State { get; set; }
-        private Stack<BoardState> History { get; set; }
+        public BoardState State { get; private set; }
+        private List<BoardState> History { get; set; }
 
         public Board()
         {
             State = new BoardState();
-            History = new Stack<BoardState>(HISTORY_SIZE);
+            History = new List<BoardState>(HISTORY_SIZE);
         }
 
         /// <summary>
@@ -184,7 +184,8 @@ namespace mancala
             }
             else
             {      
-                State = new BoardState(History.Pop());
+                State = new BoardState(History[History.Count-1]);
+                History.RemoveAt(History.Count - 1);
                 return true;
             }
         }
@@ -196,9 +197,9 @@ namespace mancala
         /// <returns>有効な手か</returns>
         public Boolean Play(int idx)
         {
-            History.Push(new BoardState(State));
+            History.Add(new BoardState(State));
             Boolean canSow = State.Play(idx);
-            if (!canSow) History.Pop();
+            if (!canSow) History.RemoveAt(History.Count-1);
             return canSow;
         }
 
