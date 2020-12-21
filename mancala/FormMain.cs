@@ -129,16 +129,17 @@ namespace mancala
             }
         }
 
-        private void ButtonQuit_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
         private void ButtonInversion_Click(object sender, EventArgs e)
         {
             isReverse = !isReverse;
             DisplayBoard();
         }
+
+        private void ButtonQuit_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
     }
 
     public class DataHistory
@@ -148,8 +149,8 @@ namespace mancala
         public int Hand { get; set; }
         public int FirstStore { get; set; }
         public int SecondStore { get; set; }
-        public long FirstBoardState { get; set; }
-        public long SecondBoardState { get; set; }
+        public string FirstBoardState { get; set; }
+        public string SecondBoardState { get; set; }
 
         public DataHistory(int no, Turn thisTurn, int pidIdx, BoardState boardState)
         {
@@ -158,8 +159,9 @@ namespace mancala
             Hand = pidIdx;
             FirstStore = boardState.Stores[(int)Construct.Turn.First];
             SecondStore = boardState.Stores[(int)Construct.Turn.Second];
-            FirstBoardState = boardState.Seed_states[(int)Construct.Turn.First];
-            SecondBoardState = boardState.Seed_states[(int)Construct.Turn.Second];
+            FirstBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Construct.Turn.First]).Take(PIT_NUM));
+            SecondBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Construct.Turn.Second]).Take(PIT_NUM));
         }
     }
+
 }

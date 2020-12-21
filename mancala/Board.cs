@@ -10,9 +10,9 @@ namespace mancala
 
     public class BoardState
     {
-        public Turn Turn { get; set; }
-        public int[] Stores { get; set; }
-        public long[] Seed_states { get; set; }
+        public Turn Turn { get; private set; }
+        public int[] Stores { get; private set; }
+        public long[] Seed_states { get; private set; }
 
         public BoardState()
         {
