@@ -54,12 +54,12 @@ namespace mancala
             {
                 int idx = 0;
                 int readByte = 4;
-                byte[] data = new byte[readByte];
-
+               
                 for (int i = 0; i < EvaluatorConst.PATTERN_NUM; i++)
                 {
                     for (int j = 0; j < EvaluatorConst.PATTERN_SIZE; i++)
                     {
+                        byte[] data = new byte[readByte];
                         fs.Read(data, idx, readByte);
                         Pattern_values[i][j] = BitConverter.ToInt32(data, 0);
                         idx += readByte;
