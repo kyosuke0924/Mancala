@@ -77,6 +77,7 @@
   <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="Construct .cs" />
+    <Compile Include="Evaluator.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -88,7 +89,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="DataHistory.datasource" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>
   <ItemGroup>

@@ -142,6 +142,7 @@ namespace mancala
             return State.Turn;
         }
 
+
         /// <summary>
         /// storeにあるseedの個数を返す。
         /// </summary>
