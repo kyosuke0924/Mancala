@@ -124,6 +124,16 @@ namespace mancala
             History = new List<BoardState>(HISTORY_SIZE);
         }
 
+        public Board(Board board)
+        {
+            State = new BoardState(board.State);
+            History = new List<BoardState>(board.History.Count);
+            for (int i = 0; i < board.History.Count; i++)
+            {
+                History.Add(new BoardState(board.History[i]));
+            }
+        }
+
         /// <summary>
         /// 局面を初期化する。
         /// </summary>
