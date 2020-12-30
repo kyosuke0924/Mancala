@@ -36,12 +36,12 @@
             this.textBoxVer = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.dataEndingFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.noDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.firstBoardStateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.secondBoardStateDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.valueDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.visitDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataEndingFileBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewEndingFile)).BeginInit();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataEndingFileBindingSource)).BeginInit();
@@ -54,7 +54,6 @@
             this.dataGridViewEndingFile.AllowUserToResizeColumns = false;
             this.dataGridViewEndingFile.AllowUserToResizeRows = false;
             this.dataGridViewEndingFile.AutoGenerateColumns = false;
-            this.dataGridViewEndingFile.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
             dataGridViewCellStyle1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
@@ -74,14 +73,12 @@
             this.dataGridViewEndingFile.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewEndingFile.EnableHeadersVisualStyles = false;
             this.dataGridViewEndingFile.Location = new System.Drawing.Point(0, 41);
-            this.dataGridViewEndingFile.MultiSelect = false;
             this.dataGridViewEndingFile.Name = "dataGridViewEndingFile";
             this.dataGridViewEndingFile.ReadOnly = true;
-            this.dataGridViewEndingFile.RowHeadersVisible = false;
             this.dataGridViewEndingFile.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridViewEndingFile.RowTemplate.Height = 21;
-            this.dataGridViewEndingFile.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewEndingFile.Size = new System.Drawing.Size(395, 516);
+            this.dataGridViewEndingFile.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
+            this.dataGridViewEndingFile.Size = new System.Drawing.Size(446, 516);
             this.dataGridViewEndingFile.TabIndex = 2;
             // 
             // panel1
@@ -93,7 +90,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(395, 41);
+            this.panel1.Size = new System.Drawing.Size(446, 41);
             this.panel1.TabIndex = 3;
             // 
             // textBoxCount
@@ -136,10 +133,6 @@
             this.label1.Text = "Ver.";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // dataEndingFileBindingSource
-            // 
-            this.dataEndingFileBindingSource.DataSource = typeof(mancala.DataEndingFile);
-            // 
             // noDataGridViewTextBoxColumn
             // 
             this.noDataGridViewTextBoxColumn.DataPropertyName = "No";
@@ -180,11 +173,15 @@
             this.visitDataGridViewTextBoxColumn.ReadOnly = true;
             this.visitDataGridViewTextBoxColumn.Width = 80;
             // 
+            // dataEndingFileBindingSource
+            // 
+            this.dataEndingFileBindingSource.DataSource = typeof(mancala.DataEndingFile);
+            // 
             // FormEndingFile
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(395, 557);
+            this.ClientSize = new System.Drawing.Size(446, 557);
             this.Controls.Add(this.dataGridViewEndingFile);
             this.Controls.Add(this.panel1);
             this.MaximizeBox = false;

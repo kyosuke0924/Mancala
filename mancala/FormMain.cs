@@ -56,7 +56,7 @@ namespace mancala
 
             evaluator.Load(EVALUATION_FILE_PATH);
             positionMap.Load(POSITION_FILE_PATH);
-            //ending.Load(ENDING_FILE_PATH);
+            ending.Load(ENDING_FILE_PATH);
 
             bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false);
             DisplayBoard();
