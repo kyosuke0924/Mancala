@@ -43,7 +43,7 @@ namespace mancala
             Pattern_values = new List<List<int>>(EvaluatorConst.PATTERN_NUM);
             for (int i = 0; i < EvaluatorConst.PATTERN_NUM; i++)
             {
-                Pattern_values.Add(new List<int>(Enumerable.Repeat(0, EvaluatorConst.PATTERN_NUM)));
+                Pattern_values.Add(new List<int>(Enumerable.Repeat(0, EvaluatorConst.PATTERN_SIZE)));
             }
         }
         

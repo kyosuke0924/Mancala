@@ -183,26 +183,26 @@ namespace mancala
                             int value = com.FindBestMove(newBoard,1000,evaluator, new PositionMap(), newEnding, false).value;
                             newEnding.Add(newBoard.State, value);
                         }
-                    }
-                    seeds[i] = 0;
-                    while (true)
-                    {
-                        if (i==0)
+                        seeds[i] = 0;
+                        while (true)
                         {
-                            isOver = true;
-                            break;
-                        }
-                        i--;
-                        if (remain > 0)
-                        {
-                            remain--;
-                            seeds[i]++;
-                            break;
-                        }
-                        else
-                        {
-                            remain += seeds[i];
-                            seeds[i] = 0;
+                            if (i == 0)
+                            {
+                                isOver = true;
+                                break;
+                            }
+                            i--;
+                            if (remain > 0)
+                            {
+                                remain--;
+                                seeds[i]++;
+                                break;
+                            }
+                            else
+                            {
+                                remain += seeds[i];
+                                seeds[i] = 0;
+                            }
                         }
                     }
                 }            
