@@ -16,6 +16,7 @@ namespace mancala
         const string EVALUATION_FILE_PATH  = "eval.dat";
         const string POSITION_FILE_PATH = "position.dat";
         const string ENDING_FILE_PATH = "ending.dat";
+        const int DEPTH = 5;
 
         private Evaluator evaluator;
         private PositionMap positionMap;
@@ -61,16 +62,30 @@ namespace mancala
             int pitIdx = GetPitIdx((System.Windows.Forms.Button)sender);
 
             Boolean result = board.Play(pitIdx);
-            DisplayBoard();
+            
             if (result)
             {
+                Move bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false);
+                for (int i = 0; i < this.pits.GetLength(0); i++)
+                {
+                    for (int j = 0; j < this.pits.GetLength(1); j++)
+                    {
+                        if (i == (int)board.GetTurn() && bestMove.i == j)
+                        {
+                            pits[i, j].BackColor = SystemColors.Highlight;
+                        }
+                        else
+                        {
+                            pits[i, j].BackColor = SystemColors.Control;
+                        }
+                    }
+                }
+
+                DisplayBoard();
                 dataHistories.Add(new DataHistory(dataHistories.Count + 1, thisTurn, pitIdx, board.State));
                 dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
                 dataGridViewHistory.FirstDisplayedScrollingRowIndex = dataGridViewHistory.Rows.Count - 1;
             }
-
-            //Com com = new Com();
-            //Move bestMove = com.FindBestMove(board);
 
         }
 
@@ -155,7 +170,7 @@ namespace mancala
 
         private void ButtonMakeEndingFile_Click(object sender, EventArgs e)
         {
-            MakeEndingFile(3,ENDING_FILE_PATH);
+            MakeEndingFile(10,ENDING_FILE_PATH);
         }
 
         private void MakeEndingFile(int seedNum,string filepath)

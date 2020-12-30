@@ -26,6 +26,10 @@ namespace mancala
         const int MAX_VALUE = 100000;
         const int EXPLORE_BONUS = 50000;
 
+
+
+
+
         public Move FindBestMove(Board iBoard,int depth,Evaluator evaluator,PositionMap positionMap, PositionMap endingMap,  Boolean explore)
         {
             Board board = new Board(iBoard);
