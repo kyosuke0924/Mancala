@@ -7,12 +7,21 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static mancala.Construct;
+using static mancala.Constant;
 
 namespace mancala
 {
     public partial class FormMain : Form
     {
+        const string EVALUATION_FILE_PATH  = "eval.dat";
+        const string POSITION_FILE_PATH = "position.dat";
+        const string ENDING_FILE_PATH = "ending.dat";
+
+        private Evaluator evaluator;
+        private PositionMap positionMap;
+        private PositionMap ending;
+
+        private Com com;
         private Board board;
         private readonly Button[,] pits;
         private Boolean isReverse = false;
@@ -22,6 +31,10 @@ namespace mancala
         {
             InitializeComponent();
             board = new Board();
+            com = new Com();
+            evaluator = new Evaluator();
+            positionMap = new PositionMap();
+            ending = new PositionMap();
 
             //ピットボタンの配列を作成
             pits = new Button[PLAYER_NUM,PIT_NUM] { {buttonS_0, buttonS_1, buttonS_2, buttonS_3, buttonS_4, buttonS_5 } ,
@@ -39,6 +52,7 @@ namespace mancala
             dataHistories = new BindingList<DataHistory>();
             dataGridViewHistory.DataSource = dataHistories; 
             DisplayBoard();
+
         }
 
         private void Pits_Click(object sender, EventArgs e)
@@ -54,6 +68,10 @@ namespace mancala
                 dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
                 dataGridViewHistory.FirstDisplayedScrollingRowIndex = dataGridViewHistory.Rows.Count - 1;
             }
+
+            //Com com = new Com();
+            //Move bestMove = com.FindBestMove(board);
+
         }
 
         private int GetPitIdx(System.Windows.Forms.Button button)
@@ -135,11 +153,67 @@ namespace mancala
             DisplayBoard();
         }
 
+        private void ButtonMakeEndingFile_Click(object sender, EventArgs e)
+        {
+            MakeEndingFile(3,ENDING_FILE_PATH);
+        }
+
+        private void MakeEndingFile(int seedNum,string filepath)
+        {
+            Board newBoard = new Board(board);
+            PositionMap newEnding = new PositionMap();
+            int[] seeds = new int[PIT_NUM * 2];
+
+            for (int max = 2; max < seedNum + 1; max++)
+            {
+                int i = 0;
+                int remain = max;
+                Boolean isOver = false;
+                while (!isOver)
+                {
+                    i++;
+                    if (remain == 0 | i == seeds.Length - 1)
+                    {
+                        seeds[i] = remain;
+                        var firstSeeds = seeds.Take(PIT_NUM).ToArray();
+                        var secondSeeds = seeds.Skip(PIT_NUM).Take(PIT_NUM).ToArray();
+                        if (firstSeeds.Sum() > 0 && secondSeeds.Sum() > 0)
+                        {
+                            newBoard.ResetWithSeeds(firstSeeds,secondSeeds);
+                            int value = com.FindBestMove(newBoard,1000,evaluator, new PositionMap(), newEnding, false).value;
+                            newEnding.Add(newBoard.State, value);
+                        }
+                    }
+                    seeds[i] = 0;
+                    while (true)
+                    {
+                        if (i==0)
+                        {
+                            isOver = true;
+                            break;
+                        }
+                        i--;
+                        if (remain > 0)
+                        {
+                            remain--;
+                            seeds[i]++;
+                            break;
+                        }
+                        else
+                        {
+                            remain += seeds[i];
+                            seeds[i] = 0;
+                        }
+                    }
+                }            
+            }
+            newEnding.Save(ENDING_FILE_PATH);
+        }
+
         private void ButtonQuit_Click(object sender, EventArgs e)
         {
             Close();
         }
-
     }
 
     public class DataHistory
@@ -155,12 +229,12 @@ namespace mancala
         public DataHistory(int no, Turn thisTurn, int pidIdx, BoardState boardState)
         {
             No = no;
-            Turn = thisTurn == Construct.Turn.First ? "先手" : "後手";
+            Turn = thisTurn == Constant.Turn.First ? "先手" : "後手";
             Hand = pidIdx;
-            FirstStore = boardState.Stores[(int)Construct.Turn.First];
-            SecondStore = boardState.Stores[(int)Construct.Turn.Second];
-            FirstBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Construct.Turn.First]).Take(PIT_NUM));
-            SecondBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Construct.Turn.Second]).Take(PIT_NUM));
+            FirstStore = boardState.Stores[(int)Constant.Turn.First];
+            SecondStore = boardState.Stores[(int)Constant.Turn.Second];
+            FirstBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Constant.Turn.First]).Take(PIT_NUM));
+            SecondBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Constant.Turn.Second]).Take(PIT_NUM));
         }
     }
 

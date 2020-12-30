@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace mancala
 {
-    public class Construct
+    public class Constant
     {
 
         public enum Turn { First, Second };

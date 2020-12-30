@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static mancala.Construct;
+using static mancala.Constant;
 
 namespace mancala
 {
@@ -12,7 +12,7 @@ namespace mancala
     {
         public Turn Turn { get; private set; }
         public int[] Stores { get; private set; }
-        public long[] Seed_states { get; private set; }
+        public long[] Seed_states { get; set; }
 
         public BoardState()
         {
@@ -141,6 +141,22 @@ namespace mancala
         {
             State = new BoardState();
             History.Clear();
+        }
+
+        /// <summary>
+        /// 局面を初期化し、引数のseed状態をセットする。
+        /// </summary>
+        public void ResetWithSeeds(int[] firstSeeds,int[]secondSeeds)
+        {
+            byte[] firstSeedsBytes = new byte[8];
+            byte[] secondSeedsBytes = new byte[8];
+            for (int i = 0; i < PIT_NUM; i++)
+            {
+                firstSeedsBytes[i] = (byte)firstSeeds[i];
+                secondSeedsBytes[i] = (byte)secondSeeds[i];
+            }
+            Reset();
+            State.Seed_states = new long[] { BitConverter.ToInt64(firstSeedsBytes,0), BitConverter.ToInt64(secondSeedsBytes, 0) };
         }
 
         /// <summary>

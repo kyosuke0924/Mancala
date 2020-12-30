@@ -38,7 +38,7 @@ namespace mancala
             var upper = MAX_VALUE;
             var lower = -MAX_VALUE;
 
-            for (int i = 0; i < Construct.PIT_NUM; i++)
+            for (int i = 0; i < Constant.PIT_NUM; i++)
             {
                 if (!board.Play(i)) continue;
 
@@ -141,7 +141,7 @@ namespace mancala
             if (depth >= 4)
             {
                 List<Move> candidates = new List<Move>();
-                for (int i = 0; i < Construct.PIT_NUM; i++)
+                for (int i = 0; i < Constant.PIT_NUM; i++)
                 {
                     if (!board.Play(i)) continue;
                     int value = evaluator.Evaluate(board.State);
@@ -154,13 +154,13 @@ namespace mancala
             }
             else {
 
-                for (int i = Construct.PIT_NUM - 1; i >= 0; i--)
+                for (int i = Constant.PIT_NUM - 1; i >= 0; i--)
                 {
                     if (board.GetSeed(turn,i) > 0) moves.Add(i);
                 }
             }
 
-            foreach (var i in moves)
+             foreach (var i in moves)
             {
                 if (!board.Play(i)) continue;
 

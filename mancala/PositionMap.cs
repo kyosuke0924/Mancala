@@ -86,16 +86,15 @@ namespace mancala
 
     public class PositionMap
     {
-        private Hashtable PositionMapTable { get; set; }
+        private Dictionary<PositionKey,PositionValue> PositionMapTable { get; set; }
         public PositionMap()
         {
-            this.PositionMapTable = new Hashtable();
+            this.PositionMapTable = new Dictionary<PositionKey, PositionValue>();
         }
 
         public void Load(string filePath)
-        {
-            FileStream fs = new System.IO.FileStream(filePath, FileMode.Open);
-            try
+        {          
+            using (FileStream fs = new System.IO.FileStream(filePath, FileMode.Open))
             {
                 int idx = 0;
                 int readByte = 8;
@@ -116,13 +115,28 @@ namespace mancala
                     idx += readByte * 3;
                 }
             }
-            catch (Exception)
+        }
+
+        public void Save(string filePath)
+        {
+            using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
-                throw;
-            }
-            finally
-            {
-                fs.Close();
+                var header = new PositionFileHeader(1, (uint)PositionMapTable.Count);
+                int idx = 0;
+
+                var headerBytes = header.ToLeBytes();
+                fs.Write(headerBytes,idx,headerBytes.Length);
+                //idx += headerBytes.Length;
+
+                foreach (var positionMap in PositionMapTable)
+                {
+                    var positionMapKeyBytes = positionMap.Key.ToLeBytes();
+                    var positionMapValueBytes = positionMap.Value.ToLeBytes();
+                    fs.Write(positionMapKeyBytes,idx,positionMapKeyBytes.Length);
+                    //idx += positionMapKeyBytes.Length;
+                    fs.Write(positionMapValueBytes,idx,positionMapValueBytes.Length);
+                    //idx += positionMapValueBytes.Length;
+                }
             }
         }
 
