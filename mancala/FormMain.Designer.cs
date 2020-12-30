@@ -61,6 +61,8 @@
             this.buttonN_2 = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.buttonShowEndingFile = new System.Windows.Forms.Button();
+            this.buttonMakeEndingFile = new System.Windows.Forms.Button();
             this.buttonInversion = new System.Windows.Forms.Button();
             this.buttonQuit = new System.Windows.Forms.Button();
             this.buttonUndo = new System.Windows.Forms.Button();
@@ -78,7 +80,6 @@
             this.dataHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel5 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.buttonMakeEndingFile = new System.Windows.Forms.Button();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -199,7 +200,7 @@
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(70, 39);
             this.label13.TabIndex = 24;
-            this.label13.Text = "5";
+            this.label13.Text = "(6)";
             this.label13.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label12
@@ -211,7 +212,7 @@
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(68, 39);
             this.label12.TabIndex = 23;
-            this.label12.Text = "4";
+            this.label12.Text = "(5)";
             this.label12.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label11
@@ -223,7 +224,7 @@
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(68, 39);
             this.label11.TabIndex = 22;
-            this.label11.Text = "3";
+            this.label11.Text = "(4)";
             this.label11.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label10
@@ -235,7 +236,7 @@
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(68, 39);
             this.label10.TabIndex = 21;
-            this.label10.Text = "2";
+            this.label10.Text = "(3)";
             this.label10.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label9
@@ -247,7 +248,7 @@
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(68, 39);
             this.label9.TabIndex = 20;
-            this.label9.Text = "1";
+            this.label9.Text = "(2)";
             this.label9.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label8
@@ -259,7 +260,7 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(68, 39);
             this.label8.TabIndex = 19;
-            this.label8.Text = "0";
+            this.label8.Text = "(1)";
             this.label8.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
             // label7
@@ -271,7 +272,7 @@
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(70, 37);
             this.label7.TabIndex = 18;
-            this.label7.Text = "0";
+            this.label7.Text = "(1)";
             this.label7.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // label6
@@ -283,7 +284,7 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(68, 37);
             this.label6.TabIndex = 17;
-            this.label6.Text = "1";
+            this.label6.Text = "(2)";
             this.label6.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // label5
@@ -295,7 +296,7 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(68, 37);
             this.label5.TabIndex = 16;
-            this.label5.Text = "2";
+            this.label5.Text = "(3)";
             this.label5.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // label4
@@ -307,7 +308,7 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(68, 37);
             this.label4.TabIndex = 15;
-            this.label4.Text = "3";
+            this.label4.Text = "(4)";
             this.label4.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // label3
@@ -319,7 +320,7 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(68, 37);
             this.label3.TabIndex = 14;
-            this.label3.Text = "4";
+            this.label3.Text = "(5)";
             this.label3.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // buttonS_4
@@ -475,12 +476,13 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(68, 37);
             this.label2.TabIndex = 13;
-            this.label2.Text = "5";
+            this.label2.Text = "(6)";
             this.label2.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             // 
             // panel2
             // 
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel2.Controls.Add(this.buttonShowEndingFile);
             this.panel2.Controls.Add(this.buttonMakeEndingFile);
             this.panel2.Controls.Add(this.buttonInversion);
             this.panel2.Controls.Add(this.buttonQuit);
@@ -491,6 +493,26 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(1132, 60);
             this.panel2.TabIndex = 2;
+            // 
+            // buttonShowEndingFile
+            // 
+            this.buttonShowEndingFile.Location = new System.Drawing.Point(786, 12);
+            this.buttonShowEndingFile.Name = "buttonShowEndingFile";
+            this.buttonShowEndingFile.Size = new System.Drawing.Size(106, 39);
+            this.buttonShowEndingFile.TabIndex = 5;
+            this.buttonShowEndingFile.Text = "endingファイル\r\nを表示";
+            this.buttonShowEndingFile.UseVisualStyleBackColor = true;
+            this.buttonShowEndingFile.Click += new System.EventHandler(this.ButtonShowEndingFile_Click);
+            // 
+            // buttonMakeEndingFile
+            // 
+            this.buttonMakeEndingFile.Location = new System.Drawing.Point(898, 12);
+            this.buttonMakeEndingFile.Name = "buttonMakeEndingFile";
+            this.buttonMakeEndingFile.Size = new System.Drawing.Size(106, 39);
+            this.buttonMakeEndingFile.TabIndex = 4;
+            this.buttonMakeEndingFile.Text = "endingファイル\r\nを作る";
+            this.buttonMakeEndingFile.UseVisualStyleBackColor = true;
+            this.buttonMakeEndingFile.Click += new System.EventHandler(this.ButtonMakeEndingFile_Click);
             // 
             // buttonInversion
             // 
@@ -673,16 +695,6 @@
             this.label1.Text = "履歴";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // buttonMakeEndingFile
-            // 
-            this.buttonMakeEndingFile.Location = new System.Drawing.Point(898, 12);
-            this.buttonMakeEndingFile.Name = "buttonMakeEndingFile";
-            this.buttonMakeEndingFile.Size = new System.Drawing.Size(106, 39);
-            this.buttonMakeEndingFile.TabIndex = 4;
-            this.buttonMakeEndingFile.Text = "endingファイル\r\nを作る";
-            this.buttonMakeEndingFile.UseVisualStyleBackColor = true;
-            this.buttonMakeEndingFile.Click += new System.EventHandler(this.ButtonMakeEndingFile_Click);
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -759,5 +771,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
         private System.Windows.Forms.Button buttonMakeEndingFile;
+        private System.Windows.Forms.Button buttonShowEndingFile;
     }
 }

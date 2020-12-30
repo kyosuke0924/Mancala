@@ -7,15 +7,15 @@ using System.Threading.Tasks;
 namespace mancala
 {
 
-    public struct Move
+    public readonly struct Move
     {
-        public int? i;
-        public int value;
+        public int? Pit { get; }
+        public int Value { get; }
 
-        public Move(int? i, int value)
+        public Move(int? pit, int value)
         {
-            this.i = i;
-            this.value = value;
+            this.Pit = pit;
+            this.Value = value;
         }
     }
 
@@ -25,10 +25,6 @@ namespace mancala
         const double CONFIDENCE_SCALE = 32.0 * EvaluatorConst.VALUE_PER_SEED;
         const int MAX_VALUE = 100000;
         const int EXPLORE_BONUS = 50000;
-
-
-
-
 
         public Move FindBestMove(Board iBoard,int depth,Evaluator evaluator,PositionMap positionMap, PositionMap endingMap,  Boolean explore)
         {
@@ -46,7 +42,7 @@ namespace mancala
             {
                 if (!board.Play(i)) continue;
 
-                (int,int)? positionMapResult;
+                (int value, int confidence)? positionMapResult;
                 {
                     var positionValue = positionMap.GetPositionValue(board.State);
                     if (positionValue != null)
@@ -76,17 +72,17 @@ namespace mancala
                     }
                 }
 
-                (int, int) result;
+                (int value, int confidence) result;
                 if (positionMapResult != null)
                 {
-                    result.Item1 = positionMapResult.Value.Item1;
-                    result.Item2 = positionMapResult.Value.Item2;
+                    result.value = positionMapResult.Value.value;
+                    result.confidence = positionMapResult.Value.confidence;
                 }
                 else
                 {
                     if (board.State.IsOver())
                     {
-                        result.Item1 = (board.State.Stores[(int)turn] - board.State.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
+                        result.value = (board.State.Stores[(int)turn] - board.State.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
                     }
                     else 
                     {
@@ -94,34 +90,34 @@ namespace mancala
 
                         if (endingValue != null)
                         {
-                            result.Item1 = board.State.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
+                            result.value = board.State.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
                         }
                         else if(depth == 1)
                         {
-                            result.Item1 = board.State.Turn == turn ? evaluator.Evaluate(board.State) : -evaluator.Evaluate(board.State);
+                            result.value = board.State.Turn == turn ? evaluator.Evaluate(board.State) : -evaluator.Evaluate(board.State);
                         }
                         else
                         {
                             if (board.State.Turn == turn)
                             {
-                                result.Item1 = Search(board, depth - 1, lower, upper, evaluator, endingMap).value;
+                                result.value = Search(board, depth - 1, lower, upper, evaluator, endingMap).Value;
                             }
                             else
                             {
-                                result.Item1 = -Search(board, depth - 1, lower, upper, evaluator, endingMap).value;
+                                result.value = -Search(board, depth - 1, -upper, -lower, evaluator, endingMap).Value;
                             }
 
                         }
                     }
 
-                    result.Item2 = explore ? result.Item1 + EXPLORE_BONUS : result.Item1;
-                    if (result.Item1 > lower) lower = result.Item1; 
+                    result.confidence = explore ? result.value + EXPLORE_BONUS : result.value;
+                    if (result.value > lower) lower = result.value; 
                 }
 
-                if (result.Item2 > bestConfidence)
+                if (result.confidence > bestConfidence)
                 {
-                    bestMove = new Move(i, result.Item1);
-                    bestConfidence = result.Item2;
+                    bestMove = new Move(i, result.value);
+                    bestConfidence = result.confidence;
                 }
 
                 board.Undo();
@@ -154,7 +150,7 @@ namespace mancala
                     board.Undo();
                 }
 
-                moves = candidates.OrderByDescending(x => x.value).Select(x => (int)x.i).ToList();
+                moves = candidates.OrderByDescending(x => x.Value).Select(x => (int)x.Pit).ToList();
             }
             else {
 
@@ -189,11 +185,11 @@ namespace mancala
                     {
                         if (board.State.Turn == turn)
                         {
-                            value = Search(board, depth - 1, lower, upper, evaluator, endingMap).value;
+                            value = Search(board, depth - 1, lowerValue, upper, evaluator, endingMap).Value;
                         }
                         else
                         {
-                            value = -Search(board, depth - 1, lower, upper, evaluator, endingMap).value;
+                            value = -Search(board, depth - 1, -upper, -lowerValue, evaluator, endingMap).Value;
                         }
                     }
 

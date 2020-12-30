@@ -16,7 +16,7 @@ namespace mancala
         const string EVALUATION_FILE_PATH  = "eval.dat";
         const string POSITION_FILE_PATH = "position.dat";
         const string ENDING_FILE_PATH = "ending.dat";
-        const int DEPTH = 5;
+        const int DEPTH = 10;
 
         private Evaluator evaluator;
         private PositionMap positionMap;
@@ -24,6 +24,7 @@ namespace mancala
 
         private Com com;
         private Board board;
+        private Move bestMove;
         private readonly Button[,] pits;
         private Boolean isReverse = false;
         private BindingList<DataHistory> dataHistories;
@@ -51,7 +52,13 @@ namespace mancala
             }
 
             dataHistories = new BindingList<DataHistory>();
-            dataGridViewHistory.DataSource = dataHistories; 
+            dataGridViewHistory.DataSource = dataHistories;
+
+            evaluator.Load(EVALUATION_FILE_PATH);
+            positionMap.Load(POSITION_FILE_PATH);
+            //ending.Load(ENDING_FILE_PATH);
+
+            bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false);
             DisplayBoard();
 
         }
@@ -65,22 +72,7 @@ namespace mancala
             
             if (result)
             {
-                Move bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false);
-                for (int i = 0; i < this.pits.GetLength(0); i++)
-                {
-                    for (int j = 0; j < this.pits.GetLength(1); j++)
-                    {
-                        if (i == (int)board.GetTurn() && bestMove.i == j)
-                        {
-                            pits[i, j].BackColor = SystemColors.Highlight;
-                        }
-                        else
-                        {
-                            pits[i, j].BackColor = SystemColors.Control;
-                        }
-                    }
-                }
-
+                bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false);
                 DisplayBoard();
                 dataHistories.Add(new DataHistory(dataHistories.Count + 1, thisTurn, pitIdx, board.State));
                 dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
@@ -109,16 +101,6 @@ namespace mancala
                 labelN.Text = "後手";
                 storeS.Text = board.GetStore(Turn.First).ToString();
                 storeN.Text = board.GetStore(Turn.Second).ToString();
-
-                for (int i = 0; i < this.pits.GetLength(0); i++)
-                {
-                    for (int j = 0; j < this.pits.GetLength(1); j++)
-                    {
-                        int seedNum = board.GetSeed((Turn)Enum.ToObject(typeof(Turn), i), j);
-                        pits[i, j].Text = seedNum > 0 ? seedNum.ToString() : "";
-                        pits[i, j].Enabled = (i == (int)board.GetTurn() ? true : false);
-                    }
-                }
             }
             else
             {
@@ -126,14 +108,23 @@ namespace mancala
                 labelN.Text = "先手";
                 storeS.Text = board.GetStore(Turn.Second).ToString();
                 storeN.Text = board.GetStore(Turn.First).ToString();
+            }
 
-                for (int i = 0; i < pits.GetLength(0); i++)
+            for (int i = 0; i < this.pits.GetLength(0); i++)
+            {
+                for (int j = 0; j < this.pits.GetLength(1); j++)
                 {
-                    for (int j = 0; j < pits.GetLength(1); j++)
+                    int seedNum = board.GetSeed((Turn)Enum.ToObject(typeof(Turn), i), j);
+                    pits[i ^ Convert.ToInt32(isReverse), j].Text = seedNum > 0 ? seedNum.ToString() : "";
+                    pits[i ^ Convert.ToInt32(isReverse), j].Enabled = (i == (int)board.GetTurn() ? true : false);
+                    if (i == (int)board.GetTurn() && bestMove.Pit == j)
                     {
-                        int seedNum = board.GetSeed((Turn)Enum.ToObject(typeof(Turn), i), j);
-                        pits[pits.GetLength(0) -1 - i, j].Text = seedNum > 0 ? seedNum.ToString() : "";
-                        pits[pits.GetLength(0) -1 - i, j].Enabled = (i == (int)board.GetTurn() ? true : false);
+                        pits[i ^ Convert.ToInt32(isReverse), j].BackColor = SystemColors.Highlight;
+                    }
+                    else
+                    {
+                        pits[i ^ Convert.ToInt32(isReverse), j].BackColor = SystemColors.Control;
+                        pits[i ^ Convert.ToInt32(isReverse), j].UseVisualStyleBackColor = true;
                     }
                 }
             }
@@ -195,7 +186,7 @@ namespace mancala
                         if (firstSeeds.Sum() > 0 && secondSeeds.Sum() > 0)
                         {
                             newBoard.ResetWithSeeds(firstSeeds,secondSeeds);
-                            int value = com.FindBestMove(newBoard,1000,evaluator, new PositionMap(), newEnding, false).value;
+                            int value = com.FindBestMove(newBoard,1000,evaluator, new PositionMap(), newEnding, false).Value;
                             newEnding.Add(newBoard.State, value);
                         }
                         seeds[i] = 0;
@@ -225,6 +216,12 @@ namespace mancala
             newEnding.Save(ENDING_FILE_PATH);
         }
 
+        private void ButtonShowEndingFile_Click(object sender, EventArgs e)
+        {
+            FormEndingFile formEndingFile = new FormEndingFile(ending);
+            formEndingFile.Show(this);
+        }
+
         private void ButtonQuit_Click(object sender, EventArgs e)
         {
             Close();
@@ -235,7 +232,7 @@ namespace mancala
     {
         public int No { get; set; }
         public string Turn { get; set; }
-        public int Hand { get; set; }
+        public string Hand { get; set; }
         public int FirstStore { get; set; }
         public int SecondStore { get; set; }
         public string FirstBoardState { get; set; }
@@ -245,7 +242,7 @@ namespace mancala
         {
             No = no;
             Turn = thisTurn == Constant.Turn.First ? "先手" : "後手";
-            Hand = pidIdx;
+            Hand = "(" + (pidIdx+1).ToString() + ")";
             FirstStore = boardState.Stores[(int)Constant.Turn.First];
             SecondStore = boardState.Stores[(int)Constant.Turn.Second];
             FirstBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Constant.Turn.First]).Take(PIT_NUM));

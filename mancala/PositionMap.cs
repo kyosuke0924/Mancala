@@ -86,10 +86,13 @@ namespace mancala
 
     public class PositionMap
     {
-        private Dictionary<PositionKey,PositionValue> PositionMapTable { get; set; }
+        public PositionFileHeader Header { get; private set; }
+        public Dictionary<PositionKey,PositionValue> PositionMapTable { get; private set; }
+
         public PositionMap()
         {
-            this.PositionMapTable = new Dictionary<PositionKey, PositionValue>();
+            PositionMapTable = new Dictionary<PositionKey, PositionValue>();
+            Header = new PositionFileHeader();
         }
 
         public void Load(string filePath)
@@ -101,18 +104,18 @@ namespace mancala
 
                 byte[] data = new byte[readByte];
                 fs.Read(data, idx, readByte);
-                PositionFileHeader header = new PositionFileHeader(data);
+                Header = new PositionFileHeader(data);
 
                 PositionMapTable.Clear();
 
-                for (int i = 0; i < header.RecordNum; i++)
+                for (int i = 0; i < Header.RecordNum; i++)
                 {
                     data = new byte[readByte * 3];
-                    fs.Read(data, idx, readByte);
+                    fs.Read(data, idx, readByte * 3);
                     PositionKey key = new PositionKey(data.Take(16).ToArray());
                     PositionValue value = new PositionValue(data.Skip(16).Take(8).ToArray());
                     PositionMapTable.Add(key, value);
-                    idx += readByte * 3;
+                    //idx += readByte * 3;
                 }
             }
         }

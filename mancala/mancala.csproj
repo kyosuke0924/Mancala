@@ -79,6 +79,12 @@
     <Compile Include="Com.cs" />
     <Compile Include="Construct .cs" />
     <Compile Include="Evaluator.cs" />
+    <Compile Include="FormEndingFile.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormEndingFile.Designer.cs">
+      <DependentUpon>FormEndingFile.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,9 +97,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="DataEndingFile.datasource" />
     <None Include="Properties\app.manifest" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="FormEndingFile.resx">
+      <DependentUpon>FormEndingFile.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FormMain.resx">
       <DependentUpon>FormMain.cs</DependentUpon>
     </EmbeddedResource>
