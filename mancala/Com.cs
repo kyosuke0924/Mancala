@@ -26,15 +26,13 @@ namespace mancala
         const int MAX_VALUE = 100000;
         const int EXPLORE_BONUS = 50000;
 
-        public Move FindBestMove(Board iBoard,int depth,Evaluator evaluator,PositionMap positionMap, PositionMap endingMap,  Boolean explore)
+        private (int value, int confidence)?[] FindMovesValues(Board board, int depth, Evaluator evaluator, PositionMap positionMap, PositionMap endingMap, Boolean explore)
         {
-            Board board = new Board(iBoard);
+            (int value, int confidence)?[] movesValues = new (int value, int confidence)?[Constant.PIT_NUM];
 
             var turn = board.GetTurn();
             var opponent = board.State.GetOpponentTurn();
             var LogTotalSize = positionMap.GetLength();
-            Move bestMove = new Move(null , 0);
-            var bestConfidence = -MAX_VALUE;
             var upper = MAX_VALUE;
             var lower = -MAX_VALUE;
 
@@ -84,7 +82,7 @@ namespace mancala
                     {
                         result.value = (board.State.Stores[(int)turn] - board.State.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
                     }
-                    else 
+                    else
                     {
                         var endingValue = endingMap.GetPositionValue(board.State);
 
@@ -92,7 +90,7 @@ namespace mancala
                         {
                             result.value = board.State.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
                         }
-                        else if(depth == 1)
+                        else if (depth == 1)
                         {
                             result.value = board.State.Turn == turn ? evaluator.Evaluate(board.State) : -evaluator.Evaluate(board.State);
                         }
@@ -111,26 +109,38 @@ namespace mancala
                     }
 
                     result.confidence = explore ? result.value + EXPLORE_BONUS : result.value;
-                    if (result.value > lower) lower = result.value; 
+                    if (result.value > lower) lower = result.value;
                 }
 
-                if (result.confidence > bestConfidence)
-                {
-                    bestMove = new Move(i, result.value);
-                    bestConfidence = result.confidence;
-                }
-
+                movesValues[i] = (result.value, result.confidence);
                 board.Undo();
 
             }
 
-            return bestMove;
+            return movesValues;
         }
 
-        private Move Search(Board iBoard, int depth, int lower, int upper, Evaluator evaluator, PositionMap endingMap)
+        public (Move bestMove ,int?[] values) FindBestMove(Board board,int depth,Evaluator evaluator,PositionMap positionMap, PositionMap endingMap,  Boolean explore)
         {
+            (int value, int confidence)?[] movesValues = FindMovesValues(board, depth, evaluator, positionMap, endingMap, explore);
 
-            Board board = new Board(iBoard);
+            Move bestMove = new Move(null, 0);
+            var bestConfidence = -MAX_VALUE;
+
+            for (int i = 0; i < movesValues.Length; i++)
+            {
+                if (movesValues[i] != null && movesValues[i].Value.confidence > bestConfidence)
+                {
+                    bestMove = new Move(i, movesValues[i].Value.value);
+                    bestConfidence = movesValues[i].Value.confidence;
+                }
+            }
+
+            return (bestMove, movesValues.Select(x => x?.value).ToArray());
+        }
+
+        private Move Search(Board board, int depth, int lower, int upper, Evaluator evaluator, PositionMap endingMap)
+        {
             var turn = board.GetTurn();
             var opponent = board.State.GetOpponentTurn();
             var maxValue = -MAX_VALUE;

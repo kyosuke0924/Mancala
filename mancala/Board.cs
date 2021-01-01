@@ -21,11 +21,11 @@ namespace mancala
             Seed_states = new long[] { INITIAL_SEEDS, INITIAL_SEEDS };
         }
 
-        public BoardState(BoardState boardState) :this()
+        public BoardState(BoardState boardState) 
         {
             Turn = boardState.Turn;
-            Array.Copy(boardState.Stores, Stores, boardState.Stores.Length);
-            Array.Copy(boardState.Seed_states, Seed_states, boardState.Seed_states.Length);
+            Stores = (int[])boardState.Stores.Clone();
+            Seed_states = (long[])boardState.Seed_states.Clone();
         }
 
         /// <summary>
@@ -116,22 +116,12 @@ namespace mancala
     public class Board
     {
         public BoardState State { get; private set; }
-        private List<BoardState> History { get; set; }
+        private Stack<BoardState> History { get; set; }
 
         public Board()
         {
             State = new BoardState();
-            History = new List<BoardState>(HISTORY_SIZE);
-        }
-
-        public Board(Board board)
-        {
-            State = new BoardState(board.State);
-            History = new List<BoardState>(board.History.Count);
-            for (int i = 0; i < board.History.Count; i++)
-            {
-                History.Add(new BoardState(board.History[i]));
-            }
+            History = new Stack<BoardState>(HISTORY_SIZE);
         }
 
         /// <summary>
@@ -211,8 +201,7 @@ namespace mancala
             }
             else
             {      
-                State = new BoardState(History[History.Count-1]);
-                History.RemoveAt(History.Count - 1);
+                State = new BoardState(History.Pop());
                 return true;
             }
         }
@@ -224,9 +213,9 @@ namespace mancala
         /// <returns>有効な手か</returns>
         public Boolean Play(int idx)
         {
-            History.Add(new BoardState(State));
+            History.Push(new BoardState(State));
             Boolean canSow = State.Play(idx);
-            if (!canSow) History.RemoveAt(History.Count-1);
+            if (!canSow) History.Pop();
             return canSow;
         }
 

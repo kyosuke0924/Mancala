@@ -30,6 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelN = new System.Windows.Forms.Label();
             this.labelS = new System.Windows.Forms.Label();
@@ -80,6 +81,14 @@
             this.dataHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel5 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.dataGridViewCandidates = new System.Windows.Forms.DataGridView();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.dataCandidateBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.handDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.valuesDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -88,6 +97,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewHistory)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataHistoryBindingSource)).BeginInit();
             this.panel5.SuspendLayout();
+            this.panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCandidates)).BeginInit();
+            this.panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataCandidateBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -101,7 +114,7 @@
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(0, 60);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1132, 436);
+            this.panel1.Size = new System.Drawing.Size(620, 516);
             this.panel1.TabIndex = 1;
             // 
             // labelN
@@ -563,7 +576,7 @@
             this.panel3.Dock = System.Windows.Forms.DockStyle.Right;
             this.panel3.Location = new System.Drawing.Point(620, 60);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(512, 436);
+            this.panel3.Size = new System.Drawing.Size(512, 516);
             this.panel3.TabIndex = 3;
             // 
             // panel4
@@ -572,7 +585,7 @@
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(0, 34);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(508, 398);
+            this.panel4.Size = new System.Drawing.Size(508, 478);
             this.panel4.TabIndex = 8;
             // 
             // dataGridViewHistory
@@ -612,7 +625,7 @@
             this.dataGridViewHistory.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridViewHistory.RowTemplate.Height = 21;
             this.dataGridViewHistory.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewHistory.Size = new System.Drawing.Size(508, 398);
+            this.dataGridViewHistory.Size = new System.Drawing.Size(508, 478);
             this.dataGridViewHistory.TabIndex = 1;
             // 
             // dataGridViewTextBoxColumn1
@@ -695,14 +708,107 @@
             this.label1.Text = "履歴";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // panel6
+            // 
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.panel6.Controls.Add(this.dataGridViewCandidates);
+            this.panel6.Controls.Add(this.panel7);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.panel6.Location = new System.Drawing.Point(0, 378);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(620, 198);
+            this.panel6.TabIndex = 4;
+            // 
+            // dataGridViewCandidates
+            // 
+            this.dataGridViewCandidates.AllowUserToAddRows = false;
+            this.dataGridViewCandidates.AllowUserToDeleteRows = false;
+            this.dataGridViewCandidates.AllowUserToResizeColumns = false;
+            this.dataGridViewCandidates.AllowUserToResizeRows = false;
+            this.dataGridViewCandidates.AutoGenerateColumns = false;
+            this.dataGridViewCandidates.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewCandidates.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridViewCandidates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.dataGridViewCandidates.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.handDataGridViewTextBoxColumn,
+            this.valuesDataGridViewTextBoxColumn});
+            this.dataGridViewCandidates.DataSource = this.dataCandidateBindingSource;
+            this.dataGridViewCandidates.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewCandidates.EnableHeadersVisualStyles = false;
+            this.dataGridViewCandidates.Location = new System.Drawing.Point(0, 37);
+            this.dataGridViewCandidates.MultiSelect = false;
+            this.dataGridViewCandidates.Name = "dataGridViewCandidates";
+            this.dataGridViewCandidates.ReadOnly = true;
+            this.dataGridViewCandidates.RowHeadersVisible = false;
+            this.dataGridViewCandidates.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridViewCandidates.RowTemplate.Height = 21;
+            this.dataGridViewCandidates.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewCandidates.Size = new System.Drawing.Size(616, 157);
+            this.dataGridViewCandidates.TabIndex = 11;
+            // 
+            // panel7
+            // 
+            this.panel7.Controls.Add(this.label14);
+            this.panel7.Dock = System.Windows.Forms.DockStyle.Top;
+            this.panel7.Location = new System.Drawing.Point(0, 0);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(616, 37);
+            this.panel7.TabIndex = 10;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("MS UI Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.label14.Location = new System.Drawing.Point(3, 13);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(59, 13);
+            this.label14.TabIndex = 8;
+            this.label14.Text = "推奨着手";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // statusStrip1
+            // 
+            this.statusStrip1.Location = new System.Drawing.Point(0, 576);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(1132, 22);
+            this.statusStrip1.TabIndex = 6;
+            this.statusStrip1.Text = "statusStrip1";
+            // 
+            // dataCandidateBindingSource
+            // 
+            this.dataCandidateBindingSource.DataSource = typeof(mancala.DataCandidate);
+            // 
+            // handDataGridViewTextBoxColumn
+            // 
+            this.handDataGridViewTextBoxColumn.DataPropertyName = "Hand";
+            this.handDataGridViewTextBoxColumn.HeaderText = "Hand";
+            this.handDataGridViewTextBoxColumn.Name = "handDataGridViewTextBoxColumn";
+            this.handDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // valuesDataGridViewTextBoxColumn
+            // 
+            this.valuesDataGridViewTextBoxColumn.DataPropertyName = "values";
+            this.valuesDataGridViewTextBoxColumn.HeaderText = "values";
+            this.valuesDataGridViewTextBoxColumn.Name = "valuesDataGridViewTextBoxColumn";
+            this.valuesDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1132, 496);
-            this.Controls.Add(this.panel3);
+            this.ClientSize = new System.Drawing.Size(1132, 598);
+            this.Controls.Add(this.panel6);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel2);
+            this.Controls.Add(this.statusStrip1);
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.Text = "マンカラ";
@@ -716,7 +822,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataHistoryBindingSource)).EndInit();
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCandidates)).EndInit();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataCandidateBindingSource)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -772,5 +884,13 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
         private System.Windows.Forms.Button buttonMakeEndingFile;
         private System.Windows.Forms.Button buttonShowEndingFile;
+        private System.Windows.Forms.Panel panel6;
+        private System.Windows.Forms.DataGridView dataGridViewCandidates;
+        private System.Windows.Forms.Panel panel7;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn handDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn valuesDataGridViewTextBoxColumn;
+        private System.Windows.Forms.BindingSource dataCandidateBindingSource;
     }
 }

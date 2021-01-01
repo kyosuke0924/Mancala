@@ -16,7 +16,7 @@ namespace mancala
         const string EVALUATION_FILE_PATH  = "eval.dat";
         const string POSITION_FILE_PATH = "position.dat";
         const string ENDING_FILE_PATH = "ending.dat";
-        const int DEPTH = 10;
+        const int DEPTH = 12;
 
         private Evaluator evaluator;
         private PositionMap positionMap;
@@ -28,6 +28,7 @@ namespace mancala
         private readonly Button[,] pits;
         private Boolean isReverse = false;
         private BindingList<DataHistory> dataHistories;
+        private BindingList<DataHistory> dataCandidates;
 
         public FormMain()
         {
@@ -58,7 +59,7 @@ namespace mancala
             positionMap.Load(POSITION_FILE_PATH);
             ending.Load(ENDING_FILE_PATH);
 
-            bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false);
+            bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false).bestMove;
             DisplayBoard();
 
         }
@@ -72,7 +73,7 @@ namespace mancala
             
             if (result)
             {
-                bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false);
+                bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false).bestMove;
                 DisplayBoard();
                 dataHistories.Add(new DataHistory(dataHistories.Count + 1, thisTurn, pitIdx, board.State));
                 dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
@@ -134,6 +135,7 @@ namespace mancala
         private void ButtonReset_Click(object sender, EventArgs e)
         {
             board.Reset();
+            bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false).bestMove;
             DisplayBoard();
             dataHistories.Clear();
         }
@@ -141,9 +143,10 @@ namespace mancala
         private void ButtonUndo_Click(object sender, EventArgs e)
         {
             Boolean result = board.Undo();
-            DisplayBoard();
             if (result)
             {
+                bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false).bestMove;
+                DisplayBoard();
                 dataHistories.RemoveAt(dataHistories.Count - 1);
                 if (dataGridViewHistory.Rows.Count > 0)
                 {
@@ -166,7 +169,7 @@ namespace mancala
 
         private void MakeEndingFile(int seedNum,string filepath)
         {
-            Board newBoard = new Board(board);
+            Board newBoard = board;
             PositionMap newEnding = new PositionMap();
             int[] seeds = new int[PIT_NUM * 2];
 
@@ -186,7 +189,7 @@ namespace mancala
                         if (firstSeeds.Sum() > 0 && secondSeeds.Sum() > 0)
                         {
                             newBoard.ResetWithSeeds(firstSeeds,secondSeeds);
-                            int value = com.FindBestMove(newBoard,1000,evaluator, new PositionMap(), newEnding, false).Value;
+                            int value = com.FindBestMove(newBoard,1000,evaluator, new PositionMap(), newEnding, false).bestMove.Value;
                             newEnding.Add(newBoard.State, value);
                         }
                         seeds[i] = 0;
@@ -250,4 +253,15 @@ namespace mancala
         }
     }
 
+    public class DataCandidate
+    {
+        public string Hand { get; set; }
+        public int Values { get; set; }
+
+        public DataCandidate(string hand, int values)
+        {
+            Hand = hand;
+            this.Values = values;
+        }
+    }
 }
