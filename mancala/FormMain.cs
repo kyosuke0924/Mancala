@@ -62,9 +62,12 @@ namespace mancala
             positionMap.Load(POSITION_FILE_PATH);
             ending.Load(ENDING_FILE_PATH);
 
+        }
+
+        public void FormMain_Shown(object sender, EventArgs e)
+        {
             SetMovesValues(com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false));
             DisplayBoard();
-
         }
 
         private void Pits_Click(object sender, EventArgs e)
@@ -89,7 +92,7 @@ namespace mancala
             dataCandidates.Clear();
             for (int i = 0; i < p.values.Length; i++)
             {
-                dataCandidates.Add(new DataCandidate(i,p.values[i]));
+                dataCandidates.Add(new DataCandidate(board.GetTurn(),i,p.values[i]));
             }
             if (bestMove.Pit != null) { dataGridViewCandidates.Rows[(int)bestMove.Pit].Selected = true; }
         }
@@ -270,10 +273,10 @@ namespace mancala
         public string Hand { get; set; }
         public string Values { get; set; }
 
-        public DataCandidate(int pidIdx, int? v)
+        public DataCandidate(Turn thisTurn, int pidIdx, int? v)
         {
             Hand = "(" + (pidIdx + 1).ToString() + ")";
-            Values = v == null ? "*****" : v.ToString();
+            Values = v == null ? "*****" : thisTurn == Constant.Turn.First ? v.ToString() : (-v).ToString();
         }
     }
 }

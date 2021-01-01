@@ -78,6 +78,8 @@
             this.panel7 = new System.Windows.Forms.Panel();
             this.label14 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.handDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataCandidateBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.dataGridViewTextBoxColumn1 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn2 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -87,8 +89,6 @@
             this.dataGridViewTextBoxColumn6 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewTextBoxColumn7 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.handDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.dataGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -721,6 +721,21 @@
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // handDataGridViewTextBoxColumn
+            // 
+            this.handDataGridViewTextBoxColumn.DataPropertyName = "Hand";
+            this.handDataGridViewTextBoxColumn.HeaderText = "手";
+            this.handDataGridViewTextBoxColumn.Name = "handDataGridViewTextBoxColumn";
+            this.handDataGridViewTextBoxColumn.ReadOnly = true;
+            this.handDataGridViewTextBoxColumn.Width = 40;
+            // 
+            // dataGridViewTextBoxColumn8
+            // 
+            this.dataGridViewTextBoxColumn8.DataPropertyName = "Values";
+            this.dataGridViewTextBoxColumn8.HeaderText = "形勢";
+            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
+            this.dataGridViewTextBoxColumn8.ReadOnly = true;
+            // 
             // dataCandidateBindingSource
             // 
             this.dataCandidateBindingSource.DataSource = typeof(mancala.DataCandidate);
@@ -785,20 +800,6 @@
             // 
             this.dataHistoryBindingSource.DataSource = typeof(mancala.DataHistory);
             // 
-            // handDataGridViewTextBoxColumn
-            // 
-            this.handDataGridViewTextBoxColumn.DataPropertyName = "Hand";
-            this.handDataGridViewTextBoxColumn.HeaderText = "手";
-            this.handDataGridViewTextBoxColumn.Name = "handDataGridViewTextBoxColumn";
-            this.handDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // dataGridViewTextBoxColumn8
-            // 
-            this.dataGridViewTextBoxColumn8.DataPropertyName = "Values";
-            this.dataGridViewTextBoxColumn8.HeaderText = "評価値";
-            this.dataGridViewTextBoxColumn8.Name = "dataGridViewTextBoxColumn8";
-            this.dataGridViewTextBoxColumn8.ReadOnly = true;
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -812,6 +813,7 @@
             this.MaximizeBox = false;
             this.Name = "FormMain";
             this.Text = "マンカラ";
+            this.Shown += new System.EventHandler(this.FormMain_Shown);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);
