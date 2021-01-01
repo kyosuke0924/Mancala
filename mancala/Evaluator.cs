@@ -66,10 +66,10 @@ namespace mancala
                     }
                 }
             }
-            //catch (Exception)
-            //{
-            //    throw;
-            //}
+            catch (Exception)
+            {
+                throw;
+            }
             finally
             {
                 fs.Close();

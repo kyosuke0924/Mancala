@@ -30,91 +30,90 @@ namespace mancala
         {
             (int value, int confidence)?[] movesValues = new (int value, int confidence)?[Constant.PIT_NUM];
 
+            Parallel.For(0, movesValues.Length, i => {
+                movesValues[i] = CalcMoveValue(new Board(board), depth, evaluator, positionMap, endingMap, explore,i);
+            });
+            return movesValues;
+        }
+
+        public(int value,int confidence)? CalcMoveValue(Board board, int depth, Evaluator evaluator, PositionMap positionMap, PositionMap endingMap, Boolean explore,int i)
+        {
+
             var turn = board.GetTurn();
             var opponent = board.State.GetOpponentTurn();
             var LogTotalSize = positionMap.GetLength();
             var upper = MAX_VALUE;
             var lower = -MAX_VALUE;
 
-            for (int i = 0; i < movesValues.Length; i++)
+            if (!board.CanPlay(i)) return null;
+
+            board.Play(i);
+            (int value, int confidence)? positionMapResult = null;
+
+            var positionValue = positionMap.GetPositionValue(board.State);
+            if (positionValue != null)
             {
-                if (!board.CanPlay(i)) continue;
-
-                board.Play(i);
-                (int value, int confidence)? positionMapResult = null;
-
-                var positionValue = positionMap.GetPositionValue(board.State);
-                if (positionValue != null)
+                if (!explore && positionValue.Value.Visit < MIN_VISIT)
                 {
-                    if (!explore && positionValue.Value.Visit < MIN_VISIT)
-                    {
-                        positionMapResult = null;
-                    }
-                    else
-                    {
-                        int value = board.State.Turn == turn ? positionValue.Value.Value : -positionValue.Value.Value;
-                        int confidence;
-                        if (explore)
-                        {
-                            confidence = value + (int)(Math.Sqrt(CONFIDENCE_SCALE * LogTotalSize / positionValue.Value.Visit));
-                        }
-                        else
-                        {
-                            confidence = value;
-                        }
-                        positionMapResult = (value, confidence);
-                    }
-                }
-
-
-                (int value, int confidence) result;
-                if (positionMapResult != null)
-                {
-                    result.value = positionMapResult.Value.value;
-                    result.confidence = positionMapResult.Value.confidence;
+                    positionMapResult = null;
                 }
                 else
                 {
-                    if (board.State.IsOver())
+                    int value = board.State.Turn == turn ? positionValue.Value.Value : -positionValue.Value.Value;
+                    int confidence;
+                    if (explore)
                     {
-                        result.value = (board.State.Stores[(int)turn] - board.State.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
+                        confidence = value + (int)(Math.Sqrt(CONFIDENCE_SCALE * LogTotalSize / positionValue.Value.Visit));
                     }
                     else
                     {
-                        var endingValue = endingMap.GetPositionValue(board.State);
+                        confidence = value;
+                    }
+                    positionMapResult = (value, confidence);
+                }
+            }
 
-                        if (endingValue != null)
+            (int value, int confidence) result;
+            if (positionMapResult != null)
+            {
+                result.value = positionMapResult.Value.value;
+                result.confidence = positionMapResult.Value.confidence;
+            }
+            else
+            {
+                if (board.State.IsOver())
+                {
+                    result.value = (board.State.Stores[(int)turn] - board.State.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
+                }
+                else
+                {
+                    var endingValue = endingMap.GetPositionValue(board.State);
+
+                    if (endingValue != null)
+                    {
+                        result.value = board.State.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
+                    }
+                    else if (depth == 1)
+                    {
+                        result.value = board.State.Turn == turn ? evaluator.Evaluate(board.State) : -evaluator.Evaluate(board.State);
+                    }
+                    else
+                    {
+                        if (board.State.Turn == turn)
                         {
-                            result.value = board.State.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
-                        }
-                        else if (depth == 1)
-                        {
-                            result.value = board.State.Turn == turn ? evaluator.Evaluate(board.State) : -evaluator.Evaluate(board.State);
+                            result.value = Search(board, depth - 1, lower, upper, evaluator, endingMap).Value;
                         }
                         else
                         {
-                            if (board.State.Turn == turn)
-                            {
-                                result.value = Search(board, depth - 1, lower, upper, evaluator, endingMap).Value;
-                            }
-                            else
-                            {
-                                result.value = -Search(board, depth - 1, -upper, -lower, evaluator, endingMap).Value;
-                            }
-
+                            result.value = -Search(board, depth - 1, -upper, -lower, evaluator, endingMap).Value;
                         }
                     }
-
-                    result.confidence = explore ? result.value + EXPLORE_BONUS : result.value;
-                    if (result.value > lower) lower = result.value;
                 }
-
-                movesValues[i] = (result.value, result.confidence);
-                board.Undo();
-
+                result.confidence = explore ? result.value + EXPLORE_BONUS : result.value;
             }
+            board.Undo();
 
-            return movesValues;
+            return (result.value, result.confidence);
         }
 
         public (Move bestMove ,int?[] values) FindBestMove(Board board,int depth,Evaluator evaluator,PositionMap positionMap, PositionMap endingMap,  Boolean explore)
@@ -132,7 +131,6 @@ namespace mancala
                     bestConfidence = movesValues[i].Value.confidence;
                 }
             }
-
             return (bestMove, movesValues.Select(x => x?.value).ToArray());
         }
 

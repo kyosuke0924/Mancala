@@ -21,7 +21,7 @@ namespace mancala
             Seed_states = new long[] { INITIAL_SEEDS, INITIAL_SEEDS };
         }
 
-        public BoardState(BoardState boardState) 
+        public BoardState(BoardState boardState)
         {
             Turn = boardState.Turn;
             Stores = (int[])boardState.Stores.Clone();
@@ -62,7 +62,7 @@ namespace mancala
         /// </summary>
         /// <param name="idx">pit位置</param>
         /// <returns>有効な手か</returns>
-        public  Boolean CanPlay(int idx)
+        public Boolean CanPlay(int idx)
         {
             int seedNum = GetSeed(Turn, idx);
             int diffIdx = idx * (MAX_SEED_NUM + 1) + seedNum;
@@ -85,12 +85,12 @@ namespace mancala
             Stores[(int)Turn] += STORE_DIFFS[diffIdx];
             int lastIdx = (idx + seedNum) % SOW_CYCLE_SIZE;
 
-            if (lastIdx < PIT_NUM && GetSeed(Turn,lastIdx) == 1) //横取り処理
+            if (lastIdx < PIT_NUM && GetSeed(Turn, lastIdx) == 1) //横取り処理
             {
                 int opponentIdx = PIT_NUM - lastIdx - 1;
                 if (GetSeed(opponent, opponentIdx) > 0)
                 {
-                    Stores[(int)Turn] += GetSeed(Turn,lastIdx) + GetSeed(opponent,opponentIdx);
+                    Stores[(int)Turn] += GetSeed(Turn, lastIdx) + GetSeed(opponent, opponentIdx);
                     Seed_states[(int)Turn] &= ~(PIT_BIT_MASK << (lastIdx * PIT_BIT_NUM));
                     Seed_states[(int)opponent] &= ~(PIT_BIT_MASK << (opponentIdx * PIT_BIT_NUM));
                 }
@@ -119,19 +119,26 @@ namespace mancala
         /// <returns>seedsの合</returns>
         private int SumSeeds(Turn turn)
         {
-           return BitConverter.GetBytes(Seed_states[(int)turn]).Sum(value => value);
+            return BitConverter.GetBytes(Seed_states[(int)turn]).Sum(value => value);
         }
 
     };
 
+
     public class Board
     {
-        public BoardState State { get; private set; }
+        public BoardState State { get; set; }
         private Stack<BoardState> History { get; set; }
 
         public Board()
         {
             Reset();
+        }
+
+        public Board(Board board)
+        {
+            State = new BoardState(board.State);
+            History = new Stack<BoardState>(board.History.Reverse());
         }
 
         /// <summary>
