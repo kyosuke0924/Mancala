@@ -16,7 +16,7 @@ namespace mancala
         const string EVALUATION_FILE_PATH  = "eval.dat";
         const string POSITION_FILE_PATH = "position.dat";
         const string ENDING_FILE_PATH = "ending.dat";
-        const int DEPTH = 12;
+        const int DEPTH = 14;
 
         private Evaluator evaluator;
         private PositionMap positionMap;
@@ -69,17 +69,15 @@ namespace mancala
             Turn thisTurn = board.GetTurn();
             int pitIdx = GetPitIdx((System.Windows.Forms.Button)sender);
 
-            Boolean result = board.Play(pitIdx);
-            
-            if (result)
+            if (board.CanPlay(pitIdx))
             {
+                board.Play(pitIdx);
                 bestMove = com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false).bestMove;
                 DisplayBoard();
                 dataHistories.Add(new DataHistory(dataHistories.Count + 1, thisTurn, pitIdx, board.State));
                 dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
                 dataGridViewHistory.FirstDisplayedScrollingRowIndex = dataGridViewHistory.Rows.Count - 1;
             }
-
         }
 
         private int GetPitIdx(System.Windows.Forms.Button button)

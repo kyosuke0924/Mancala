@@ -17,7 +17,7 @@ namespace mancala
         public BoardState()
         {
             Turn = Turn.First;
-            Stores = new int[]{ 0, 0 };
+            Stores = new int[] { 0, 0 };
             Seed_states = new long[] { INITIAL_SEEDS, INITIAL_SEEDS };
         }
 
@@ -58,15 +58,26 @@ namespace mancala
         }
 
         /// <summary>
+        /// 有効な手かを返す
+        /// </summary>
+        /// <param name="idx">pit位置</param>
+        /// <returns>有効な手か</returns>
+        public  Boolean CanPlay(int idx)
+        {
+            int seedNum = GetSeed(Turn, idx);
+            int diffIdx = idx * (MAX_SEED_NUM + 1) + seedNum;
+            return SEED_DIFFS[diffIdx] != 0;
+        }
+
+        /// <summary>
         /// 一手進める。ルール上有効な手ならtrueを、無効な手ならfalseを返す。
         /// </summary>
-        /// <param name="idx"></param>
+        /// <param name="idx">pit位置</param>
         /// <returns>有効な手か</returns>
         public Boolean Play(int idx)
         {
             int seedNum = GetSeed(Turn, idx);
             int diffIdx = idx * (MAX_SEED_NUM + 1) + seedNum;
-            if (SEED_DIFFS[diffIdx] == 0) return false;
 
             Turn opponent = GetOpponentTurn();
             Seed_states[(int)Turn] += SEED_DIFFS[diffIdx];
@@ -120,8 +131,7 @@ namespace mancala
 
         public Board()
         {
-            State = new BoardState();
-            History = new Stack<BoardState>(HISTORY_SIZE);
+            Reset();
         }
 
         /// <summary>
@@ -130,7 +140,7 @@ namespace mancala
         public void Reset()
         {
             State = new BoardState();
-            History.Clear();
+            History = new Stack<BoardState>(HISTORY_SIZE);
         }
 
         /// <summary>
@@ -146,7 +156,7 @@ namespace mancala
                 secondSeedsBytes[i] = (byte)secondSeeds[i];
             }
             Reset();
-            State.Seed_states = new long[] { BitConverter.ToInt64(firstSeedsBytes,0), BitConverter.ToInt64(secondSeedsBytes, 0) };
+            State.Seed_states = new long[] { BitConverter.ToInt64(firstSeedsBytes, 0), BitConverter.ToInt64(secondSeedsBytes, 0) };
         }
 
         /// <summary>
@@ -190,33 +200,34 @@ namespace mancala
         }
 
         /// <summary>
+        /// 有効な手かを返す
+        /// </summary>
+        /// <param name="idx">pit位置</param>
+        /// <returns>有効な手か</returns>
+        public Boolean CanPlay(int idx)
+        {
+            return State.CanPlay(idx);
+        }
+
+        /// <summary>
         /// 一手戻す。初期局面では局面を戻せないのでNoneを返す。
         /// </summary>
         /// <returns>戻せたかどうか</returns>
         public Boolean Undo()
         {
-            if (History.Count == 0)
-            {
-                return false;
-            }
-            else
-            {      
-                State = new BoardState(History.Pop());
-                return true;
-            }
+            if (History.Count == 0) return false;
+            State = new BoardState(History.Pop());
+            return true;
         }
 
         /// <summary>
         /// 一手進める。ルール上有効な手ならtrueを、無効な手ならfalseを返す。
         /// </summary>
-        /// <param name="idx"></param>
-        /// <returns>有効な手か</returns>
-        public Boolean Play(int idx)
+        /// <param name="idx">pit位置</param>
+        public void Play(int idx)
         {
             History.Push(new BoardState(State));
-            Boolean canSow = State.Play(idx);
-            if (!canSow) History.Pop();
-            return canSow;
+            State.Play(idx);
         }
 
     }

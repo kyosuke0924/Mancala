@@ -36,39 +36,36 @@ namespace mancala
             var upper = MAX_VALUE;
             var lower = -MAX_VALUE;
 
-            for (int i = 0; i < Constant.PIT_NUM; i++)
+            for (int i = 0; i < movesValues.Length; i++)
             {
-                if (!board.Play(i)) continue;
+                if (!board.CanPlay(i)) continue;
 
-                (int value, int confidence)? positionMapResult;
+                board.Play(i);
+                (int value, int confidence)? positionMapResult = null;
+
+                var positionValue = positionMap.GetPositionValue(board.State);
+                if (positionValue != null)
                 {
-                    var positionValue = positionMap.GetPositionValue(board.State);
-                    if (positionValue != null)
-                    {
-                        if (!explore && positionValue.Value.Visit < MIN_VISIT)
-                        {
-                            positionMapResult = null;
-                        }
-                        else
-                        {
-                            int value = board.State.Turn == turn ? positionValue.Value.Value : -positionValue.Value.Value;
-                            int confidence;
-                            if (explore)
-                            {
-                                confidence = value + (int)(Math.Sqrt(CONFIDENCE_SCALE * LogTotalSize / positionValue.Value.Visit));
-                            }
-                            else
-                            {
-                                confidence = value;
-                            }
-                            positionMapResult = (value, confidence);
-                        }
-                    }
-                    else
+                    if (!explore && positionValue.Value.Visit < MIN_VISIT)
                     {
                         positionMapResult = null;
                     }
+                    else
+                    {
+                        int value = board.State.Turn == turn ? positionValue.Value.Value : -positionValue.Value.Value;
+                        int confidence;
+                        if (explore)
+                        {
+                            confidence = value + (int)(Math.Sqrt(CONFIDENCE_SCALE * LogTotalSize / positionValue.Value.Visit));
+                        }
+                        else
+                        {
+                            confidence = value;
+                        }
+                        positionMapResult = (value, confidence);
+                    }
                 }
+
 
                 (int value, int confidence) result;
                 if (positionMapResult != null)
@@ -153,11 +150,10 @@ namespace mancala
                 List<Move> candidates = new List<Move>();
                 for (int i = 0; i < Constant.PIT_NUM; i++)
                 {
-                    if (!board.Play(i)) continue;
+                    if (!board.CanPlay(i)) continue;
                     int value = evaluator.Evaluate(board.State);
                     value = board.State.Turn == turn ? -value : value;
                     candidates.Add(new Move(i, value));
-                    board.Undo();
                 }
 
                 moves = candidates.OrderByDescending(x => x.Value).Select(x => (int)x.Pit).ToList();
@@ -172,8 +168,9 @@ namespace mancala
 
              foreach (var i in moves)
             {
-                if (!board.Play(i)) continue;
+                if (!board.CanPlay(i)) continue;
 
+                board.Play(i);
                 int value;
                 if (board.State.IsOver())
                 {
