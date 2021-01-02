@@ -53,12 +53,6 @@ namespace mancala
                 }             
             }
 
-            //dataHistories = new BindingList<DataHistory>();
-            //dataGridViewHistory.DataSource = dataHistories;      
-
-            //dataCandidates = new BindingList<DataCandidate>();
-            //dataGridViewCandidates.DataSource = dataCandidates;
-
             evaluator.Load(EVALUATION_FILE_PATH);
             positionMap.Load(POSITION_FILE_PATH);
             ending.Load(ENDING_FILE_PATH);
@@ -87,7 +81,6 @@ namespace mancala
                 dataHistoryBindingSource.Add(new DataHistory(dataHistoryBindingSource.Count + 1, thisTurn, pitIdx, board.State, value));               
                 dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
                 dataGridViewHistory.FirstDisplayedScrollingRowIndex = dataGridViewHistory.Rows.Count - 1;
-                chart1.DataBind();
             }
         }
 
@@ -157,8 +150,7 @@ namespace mancala
             board.Reset();
             SetMovesValues(com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false));
             DisplayBoard();
-            dataHistoryBindingSource.Clear();
-            chart1.DataBind();
+            dataHistoryBindingSource.Clear();        
         }
 
         private void ButtonUndo_Click(object sender, EventArgs e)
@@ -169,7 +161,6 @@ namespace mancala
                 SetMovesValues(com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false));
                 DisplayBoard();
                 dataHistoryBindingSource.RemoveAt(dataHistoryBindingSource.Count - 1);
-                chart1.DataBind();
                 if (dataGridViewHistory.Rows.Count > 0)
                 {
                     dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
@@ -251,6 +242,12 @@ namespace mancala
         {
             Close();
         }
+
+        private void DatahistoryBindingSource_ListChanged(object sender, ListChangedEventArgs e)
+        {
+            chart1.DataBind();
+        }
+
     }
 
     public class DataHistory

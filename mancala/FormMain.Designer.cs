@@ -830,6 +830,7 @@
             // dataHistoryBindingSource
             // 
             this.dataHistoryBindingSource.DataSource = typeof(mancala.DataHistory);
+            this.dataHistoryBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.DatahistoryBindingSource_ListChanged);
             // 
             // handDataGridViewTextBoxColumn
             // 
