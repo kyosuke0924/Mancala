@@ -160,7 +160,6 @@ namespace mancala
             value += Pattern_values[58][EvaluatorConst.SEED_TO_INDEX_0[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[1]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
             value += Pattern_values[59][EvaluatorConst.SEED_TO_INDEX_0[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[1]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
 
-
             return (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED + value;
 
         }

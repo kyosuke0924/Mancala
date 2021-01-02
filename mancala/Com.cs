@@ -150,10 +150,8 @@ namespace mancala
                 {
                     if (!board.CanPlay(i)) continue;
                     int value = evaluator.Evaluate(board.State);
-                    value = board.State.Turn == turn ? -value : value;
-                    candidates.Add(new Move(i, value));
+                    candidates.Add(new Move(i, board.State.Turn == turn ? -value : value));
                 }
-
                 moves = candidates.OrderByDescending(x => x.Value).Select(x => (int)x.Pit).ToList();
             }
             else {
@@ -164,7 +162,7 @@ namespace mancala
                 }
             }
 
-             foreach (var i in moves)
+            foreach (var i in moves)
             {
                 if (!board.CanPlay(i)) continue;
 
@@ -205,19 +203,11 @@ namespace mancala
                 {
                     bestMove = new Move(i, value);
                     maxValue = value;
-                    if (value >= upper)
-                    {
-                        return bestMove;
-                    }else if(maxValue > lowerValue)
-                    {
-                        lowerValue = maxValue;
-                    }
+                    if (value >= upper) return bestMove;
+                    if(maxValue > lowerValue) lowerValue = maxValue;
                 }
-
             }
-
             return bestMove;
-
         }
     }
 }

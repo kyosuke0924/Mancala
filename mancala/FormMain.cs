@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.DataVisualization.Charting;
 using static mancala.Constant;
 
 namespace mancala
@@ -27,8 +28,8 @@ namespace mancala
         private Move bestMove;
         private readonly Button[,] pits;
         private Boolean isReverse = false;
-        private BindingList<DataHistory> dataHistories;
-        private BindingList<DataCandidate> dataCandidates;
+        //private BindingList<DataHistory> dataHistories;
+        //private BindingList<DataCandidate> dataCandidates;
 
         public FormMain()
         {
@@ -52,11 +53,11 @@ namespace mancala
                 }             
             }
 
-            dataHistories = new BindingList<DataHistory>();
-            dataGridViewHistory.DataSource = dataHistories;
+            //dataHistories = new BindingList<DataHistory>();
+            //dataGridViewHistory.DataSource = dataHistories;      
 
-            dataCandidates = new BindingList<DataCandidate>();
-            dataGridViewCandidates.DataSource = dataCandidates;
+            //dataCandidates = new BindingList<DataCandidate>();
+            //dataGridViewCandidates.DataSource = dataCandidates;
 
             evaluator.Load(EVALUATION_FILE_PATH);
             positionMap.Load(POSITION_FILE_PATH);
@@ -64,8 +65,10 @@ namespace mancala
 
         }
 
-        public void FormMain_Shown(object sender, EventArgs e)
+        private void FormMain_Shown(object sender, EventArgs e)
         {
+            dataGridViewHistory.Columns[3].HeaderCell.Style.WrapMode = DataGridViewTriState.True;
+            dataGridViewHistory.Columns[4].HeaderCell.Style.WrapMode = DataGridViewTriState.True;
             SetMovesValues(com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false));
             DisplayBoard();
         }
@@ -77,22 +80,24 @@ namespace mancala
 
             if (board.CanPlay(pitIdx))
             {
+                string value = ((DataCandidate)dataCandidateBindingSource[pitIdx]).Values;
                 board.Play(pitIdx);
                 SetMovesValues(com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false));
                 DisplayBoard();
-                dataHistories.Add(new DataHistory(dataHistories.Count + 1, thisTurn, pitIdx, board.State));
+                dataHistoryBindingSource.Add(new DataHistory(dataHistoryBindingSource.Count + 1, thisTurn, pitIdx, board.State, value));               
                 dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
                 dataGridViewHistory.FirstDisplayedScrollingRowIndex = dataGridViewHistory.Rows.Count - 1;
+                chart1.DataBind();
             }
         }
 
         private void SetMovesValues((Move bestMove, int?[] values) p)
         {
             bestMove = p.bestMove;
-            dataCandidates.Clear();
+            dataCandidateBindingSource.Clear();
             for (int i = 0; i < p.values.Length; i++)
             {
-                dataCandidates.Add(new DataCandidate(board.GetTurn(),i,p.values[i]));
+                dataCandidateBindingSource.Add(new DataCandidate(board.GetTurn(), i, p.values[i]));
             }
             if (bestMove.Pit != null) { dataGridViewCandidates.Rows[(int)bestMove.Pit].Selected = true; }
         }
@@ -115,15 +120,15 @@ namespace mancala
             {
                 labelS.Text = "先手";
                 labelN.Text = "後手";
-                storeS.Text = board.GetStore(Turn.First).ToString();
-                storeN.Text = board.GetStore(Turn.Second).ToString();
+                storeS.Text = board.GetStore(Constant.Turn.First).ToString();
+                storeN.Text = board.GetStore(Constant.Turn.Second).ToString();
             }
             else
             {
                 labelS.Text = "後手";
                 labelN.Text = "先手";
-                storeS.Text = board.GetStore(Turn.Second).ToString();
-                storeN.Text = board.GetStore(Turn.First).ToString();
+                storeS.Text = board.GetStore(Constant.Turn.Second).ToString();
+                storeN.Text = board.GetStore(Constant.Turn.First).ToString();
             }
 
             for (int i = 0; i < this.pits.GetLength(0); i++)
@@ -152,7 +157,8 @@ namespace mancala
             board.Reset();
             SetMovesValues(com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false));
             DisplayBoard();
-            dataHistories.Clear();
+            dataHistoryBindingSource.Clear();
+            chart1.DataBind();
         }
 
         private void ButtonUndo_Click(object sender, EventArgs e)
@@ -162,7 +168,8 @@ namespace mancala
             {
                 SetMovesValues(com.FindBestMove(board, DEPTH, evaluator, positionMap, ending, false));
                 DisplayBoard();
-                dataHistories.RemoveAt(dataHistories.Count - 1);
+                dataHistoryBindingSource.RemoveAt(dataHistoryBindingSource.Count - 1);
+                chart1.DataBind();
                 if (dataGridViewHistory.Rows.Count > 0)
                 {
                     dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
@@ -255,8 +262,9 @@ namespace mancala
         public int SecondStore { get; set; }
         public string FirstBoardState { get; set; }
         public string SecondBoardState { get; set; }
+        public int Value { get; set; }
 
-        public DataHistory(int no, Turn thisTurn, int pidIdx, BoardState boardState)
+        public DataHistory(int no, Turn thisTurn, int pidIdx, BoardState boardState,string value)
         {
             No = no;
             Turn = thisTurn == Constant.Turn.First ? "先手" : "後手";
@@ -265,6 +273,7 @@ namespace mancala
             SecondStore = boardState.Stores[(int)Constant.Turn.Second];
             FirstBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Constant.Turn.First]).Take(PIT_NUM));
             SecondBoardState = String.Join(" ", BitConverter.GetBytes(boardState.Seed_states[(int)Constant.Turn.Second]).Take(PIT_NUM));
+            Value = Convert.ToInt32(value);
         }
     }
 
