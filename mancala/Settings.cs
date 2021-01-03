@@ -1,4 +1,4 @@
-﻿namespace mancala.Properties {
+﻿namespace Mancala.Properties {
     
     
     // このクラスでは設定クラスでの特定のイベントを処理することができます:

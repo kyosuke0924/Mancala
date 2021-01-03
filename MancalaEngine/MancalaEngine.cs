@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using common;
 
-namespace mancala
+
+namespace mancalaEngine
 {
-
     public readonly struct Move
     {
         public int? Pit { get; }
@@ -19,24 +20,65 @@ namespace mancala
         }
     }
 
-    public class Com
+    public class MancalaEngine
     {
-        const int  MIN_VISIT = 10;
-        const double CONFIDENCE_SCALE = 32.0 * EvaluatorConst.VALUE_PER_SEED;
-        const int MAX_VALUE = 100000;
-        const int EXPLORE_BONUS = 50000;
+        private const string EVALUATION_FILE_PATH = "eval.dat";
+        private const string POSITION_FILE_PATH = "position.dat";
+        private const string ENDING_FILE_PATH = "ending.dat";
 
-        private (int value, int confidence)?[] FindMovesValues(Board board, int depth, Evaluator evaluator, PositionMap positionMap, PositionMap endingMap, Boolean explore)
+        private const int  MIN_VISIT = 10;
+        private const double CONFIDENCE_SCALE = 32.0 * EvaluatorConst.VALUE_PER_SEED;
+        private const int MAX_VALUE = 100000;
+        private const int EXPLORE_BONUS = 50000;
+
+        private Evaluator evaluator;
+        private PositionMap positionMap;
+        public PositionMap EndingMap { get; private set; }
+
+        public MancalaEngine()
+        {
+            LoadFiles();
+        }
+
+        public void LoadFiles()
+        {
+            evaluator = new Evaluator();
+            positionMap = new PositionMap();
+            EndingMap = new PositionMap();
+            evaluator.Load(EVALUATION_FILE_PATH);
+            positionMap.Load(POSITION_FILE_PATH);
+            EndingMap.Load(ENDING_FILE_PATH);
+        }
+
+        public (Move bestMove, int?[] values) FindBestMove(Board board, int depth, bool explore)
+        {
+            (int value, int confidence)?[] movesValues = FindMovesValues(board, depth, explore);
+
+            Move bestMove = new Move(null, 0);
+            var bestConfidence = -MAX_VALUE;
+
+            for (int i = 0; i < movesValues.Length; i++)
+            {
+                if (movesValues[i] != null && movesValues[i].Value.confidence > bestConfidence)
+                {
+                    bestMove = new Move(i, movesValues[i].Value.value);
+                    bestConfidence = movesValues[i].Value.confidence;
+                }
+            }
+            return (bestMove, movesValues.Select(x => x?.value).ToArray());
+        }
+
+        private (int value, int confidence)?[] FindMovesValues(Board board, int depth, bool explore)
         {
             (int value, int confidence)?[] movesValues = new (int value, int confidence)?[Constant.PIT_NUM];
 
             Parallel.For(0, movesValues.Length, i => {
-                movesValues[i] = CalcMoveValue(new Board(board), depth, evaluator, positionMap, endingMap, explore,i);
+                movesValues[i] = CalcMoveValue(new Board(board), depth, explore,i);
             });
             return movesValues;
         }
 
-        public(int value,int confidence)? CalcMoveValue(Board board, int depth, Evaluator evaluator, PositionMap positionMap, PositionMap endingMap, Boolean explore,int i)
+        private (int value,int confidence)? CalcMoveValue(Board board, int depth, bool explore,int i)
         {
 
             var turn = board.GetTurn();
@@ -87,7 +129,7 @@ namespace mancala
                 }
                 else
                 {
-                    var endingValue = endingMap.GetPositionValue(board.State);
+                    var endingValue = EndingMap.GetPositionValue(board.State);
 
                     if (endingValue != null)
                     {
@@ -101,11 +143,11 @@ namespace mancala
                     {
                         if (board.State.Turn == turn)
                         {
-                            result.value = Search(board, depth - 1, lower, upper, evaluator, endingMap).Value;
+                            result.value = Search(board, depth - 1, lower, upper).Value;
                         }
                         else
                         {
-                            result.value = -Search(board, depth - 1, -upper, -lower, evaluator, endingMap).Value;
+                            result.value = -Search(board, depth - 1, -upper, -lower).Value;
                         }
                     }
                 }
@@ -116,25 +158,7 @@ namespace mancala
             return (result.value, result.confidence);
         }
 
-        public (Move bestMove ,int?[] values) FindBestMove(Board board,int depth,Evaluator evaluator,PositionMap positionMap, PositionMap endingMap,  Boolean explore)
-        {
-            (int value, int confidence)?[] movesValues = FindMovesValues(board, depth, evaluator, positionMap, endingMap, explore);
-
-            Move bestMove = new Move(null, 0);
-            var bestConfidence = -MAX_VALUE;
-
-            for (int i = 0; i < movesValues.Length; i++)
-            {
-                if (movesValues[i] != null && movesValues[i].Value.confidence > bestConfidence)
-                {
-                    bestMove = new Move(i, movesValues[i].Value.value);
-                    bestConfidence = movesValues[i].Value.confidence;
-                }
-            }
-            return (bestMove, movesValues.Select(x => x?.value).ToArray());
-        }
-
-        private Move Search(Board board, int depth, int lower, int upper, Evaluator evaluator, PositionMap endingMap)
+        private Move Search(Board board, int depth, int lower, int upper)
         {
             var turn = board.GetTurn();
             var opponent = board.State.GetOpponentTurn();
@@ -179,7 +203,7 @@ namespace mancala
                 }
                 else
                 {
-                    var endingValue = endingMap.GetPositionValue(board.State);
+                    var endingValue = EndingMap.GetPositionValue(board.State);
                     if (endingValue != null)
                     {
                         value = board.State.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
@@ -188,11 +212,11 @@ namespace mancala
                     {
                         if (board.State.Turn == turn)
                         {
-                            value = Search(board, depth - 1, lowerValue, upper, evaluator, endingMap).Value;
+                            value = Search(board, depth - 1, lowerValue, upper).Value;
                         }
                         else
                         {
-                            value = -Search(board, depth - 1, -upper, -lowerValue, evaluator, endingMap).Value;
+                            value = -Search(board, depth - 1, -upper, -lowerValue).Value;
                         }
                     }
 
@@ -208,6 +232,61 @@ namespace mancala
                 }
             }
             return bestMove;
+        }
+
+        public void MakeEndingFile(int seedNum)
+        {
+            Board newBoard = new Board();
+            positionMap = new PositionMap();
+            EndingMap = new PositionMap();
+
+            int[] seeds = new int[Constant.PIT_NUM * 2];
+
+            for (int max = 2; max < seedNum + 1; max++)
+            {
+                int i = 0;
+                int remain = max;
+                Boolean isOver = false;
+                while (!isOver)
+                {
+                    i++;
+                    if (remain == 0 | i == seeds.Length - 1)
+                    {
+                        seeds[i] = remain;
+                        var firstSeeds = seeds.Take(Constant.PIT_NUM).ToArray();
+                        var secondSeeds = seeds.Skip(Constant.PIT_NUM).Take(Constant.PIT_NUM).ToArray();
+                        if (firstSeeds.Sum() > 0 && secondSeeds.Sum() > 0)
+                        {
+                            newBoard.ResetWithSeeds(firstSeeds, secondSeeds);
+                            int value = FindBestMove(newBoard, 1000, false).bestMove.Value;
+                            EndingMap.Add(newBoard.State, value);
+                        }
+                        seeds[i] = 0;
+                        while (true)
+                        {
+                            if (i == 0)
+                            {
+                                isOver = true;
+                                break;
+                            }
+                            i--;
+                            if (remain > 0)
+                            {
+                                remain--;
+                                seeds[i]++;
+                                break;
+                            }
+                            else
+                            {
+                                remain += seeds[i];
+                                seeds[i] = 0;
+                            }
+                        }
+                    }
+                }
+            }
+            EndingMap.Save(ENDING_FILE_PATH);
+            LoadFiles();
         }
     }
 }

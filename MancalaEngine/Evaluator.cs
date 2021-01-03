@@ -1,31 +1,32 @@
-﻿using System;
+﻿using common;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace mancala
+namespace mancalaEngine
 {
-    static public class EvaluatorConst
+    static internal class EvaluatorConst
     {
-        public const int VALUE_PER_SEED = 100;
-        public const int PATTERN_NUM = 60;
-        public const int PATTERN_SIZE = 15 * 15 * 15;
-        public const int MAX_SEED = 48;
-        public static readonly int[] SEED_TO_INDEX_0 = new int[MAX_SEED]
+        internal const int VALUE_PER_SEED = 100;
+        internal const int PATTERN_NUM = 60;
+        internal const int PATTERN_SIZE = 15 * 15 * 15;
+        internal const int MAX_SEED = 48;
+        internal static readonly int[] SEED_TO_INDEX_0 = new int[MAX_SEED]
                                    {
                                          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
                                         14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
                                    };
 
-        public static readonly int[] SEED_TO_INDEX_1 = new int[MAX_SEED]
+        internal static readonly int[] SEED_TO_INDEX_1 = new int[MAX_SEED]
                                    {
                                         0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210,
                                         210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210,
                                    };
 
-        public static readonly int[] SEED_TO_INDEX_2 = new int[MAX_SEED]
+        internal static readonly int[] SEED_TO_INDEX_2 = new int[MAX_SEED]
                                    {
                                         0, 225, 450, 675, 900, 1125, 1350, 1575, 1800, 2025, 2250, 2475, 2700, 2925, 3150, 3150, 3150, 3150, 3150, 3150,
                                         3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150,
@@ -34,11 +35,11 @@ namespace mancala
     }
 
 
-    public class Evaluator
+    internal class Evaluator
     {
         private List<List<int>> Pattern_values { set; get;}
 
-        public Evaluator()
+        internal Evaluator()
         {
             Pattern_values = new List<List<int>>(EvaluatorConst.PATTERN_NUM);
             for (int i = 0; i < EvaluatorConst.PATTERN_NUM; i++)
@@ -46,8 +47,8 @@ namespace mancala
                 Pattern_values.Add(new List<int>(Enumerable.Repeat(0, EvaluatorConst.PATTERN_SIZE)));
             }
         }
-        
-        public void Load(string filePath)
+
+        internal void Load(string filePath)
         {
             FileStream fs = new System.IO.FileStream(filePath, FileMode.Open);
             try
@@ -76,7 +77,7 @@ namespace mancala
             }
         }
 
-        public int Evaluate(BoardState boardState)
+        internal int Evaluate(BoardState boardState)
         {
             var turn = boardState.Turn;
             var opponent = boardState.GetOpponentTurn();

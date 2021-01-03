@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29201.188
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "mancala", "mancala\mancala.csproj", "{709AC2B0-D849-4AD1-847D-7502D11D5A09}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mancala", "Mancala\Mancala.csproj", "{709AC2B0-D849-4AD1-847D-7502D11D5A09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{4E40D574-6488-488D-83C4-D488D80D8EEC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MancalaEngine", "MancalaEngine\MancalaEngine.csproj", "{F9503779-3A42-449E-ACB3-F758B710235F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{709AC2B0-D849-4AD1-847D-7502D11D5A09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{709AC2B0-D849-4AD1-847D-7502D11D5A09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{709AC2B0-D849-4AD1-847D-7502D11D5A09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E40D574-6488-488D-83C4-D488D80D8EEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E40D574-6488-488D-83C4-D488D80D8EEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E40D574-6488-488D-83C4-D488D80D8EEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E40D574-6488-488D-83C4-D488D80D8EEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9503779-3A42-449E-ACB3-F758B710235F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9503779-3A42-449E-ACB3-F758B710235F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9503779-3A42-449E-ACB3-F758B710235F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9503779-3A42-449E-ACB3-F758B710235F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

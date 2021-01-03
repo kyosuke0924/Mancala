@@ -1,4 +1,4 @@
-﻿namespace mancala
+﻿namespace Mancala
 {
     partial class FormEndingFile
     {
@@ -175,7 +175,7 @@
             // 
             // dataEndingFileBindingSource
             // 
-            this.dataEndingFileBindingSource.DataSource = typeof(mancala.DataEndingFile);
+            this.dataEndingFileBindingSource.DataSource = typeof(Mancala.DataEndingFile);
             // 
             // FormEndingFile
             // 

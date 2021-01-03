@@ -1,15 +1,12 @@
-﻿using System;
+﻿using mancalaEngine;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static mancala.Constant;
+using static common.Constant;
 
-namespace mancala
+namespace Mancala
 {
     public partial class FormEndingFile : Form
     {

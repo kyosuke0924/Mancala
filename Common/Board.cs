@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static mancala.Constant;
+using static common.Constant;
 
-namespace mancala
+namespace common
 {
 
     public class BoardState

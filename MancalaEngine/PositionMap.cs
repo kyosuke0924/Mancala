@@ -1,4 +1,5 @@
-﻿using System;
+﻿using common;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.BitConverter;
 
-namespace mancala
+namespace mancalaEngine
 {
 
     public struct PositionKey
@@ -15,12 +16,12 @@ namespace mancala
         public long BoardState0 { get; }
         public long BoardState1 { get; }
 
-        public PositionKey(long boardState0, long boardState1)
+        internal PositionKey(long boardState0, long boardState1)
         {
             BoardState0 = boardState0;
             BoardState1 = boardState1;
         }
-        public byte[] ToLeBytes()
+        internal byte[] ToLeBytes()
         {
             return (byte[])GetBytes(BoardState0).Concat(GetBytes(BoardState1)).ToArray().Clone();
         }
@@ -40,7 +41,7 @@ namespace mancala
             return hashCode;
         }
 
-        public PositionKey(byte[] vs) : this(ToInt64(vs, 0), ToInt64(vs, 8)) { }
+        internal PositionKey(byte[] vs) : this(ToInt64(vs, 0), ToInt64(vs, 8)) { }
 
     }
 
@@ -49,18 +50,18 @@ namespace mancala
         public int Value { get;}
         public int Visit { get;}
 
-        public PositionValue(int value, int visit)
+        internal PositionValue(int value, int visit)
         {
             Value = value;
             Visit = visit;
         }
 
-        public byte[] ToLeBytes()
+        internal byte[] ToLeBytes()
         {
             return (byte[])GetBytes(Value).Concat(GetBytes(Visit)).ToArray().Clone();
         }
 
-        public PositionValue(byte[] vs) : this(ToInt32(vs, 0), ToInt32(vs, 4)) { } 
+        internal PositionValue(byte[] vs) : this(ToInt32(vs, 0), ToInt32(vs, 4)) { } 
 
     }
 
@@ -69,18 +70,18 @@ namespace mancala
         public uint Version { get; }
         public uint RecordNum { get;}
 
-        public PositionFileHeader(uint version, uint recordNum)
+        internal PositionFileHeader(uint version, uint recordNum)
         {
             Version = version;
             RecordNum = recordNum;
         }
 
-        public byte[] ToLeBytes()
+        internal byte[] ToLeBytes()
         {
             return (byte[])GetBytes(Version).Concat(GetBytes(RecordNum)).ToArray().Clone();
         }
 
-        public PositionFileHeader(byte[] vs) :this(ToUInt32(vs, 0), ToUInt32(vs, 4)) { } 
+        internal PositionFileHeader(byte[] vs) :this(ToUInt32(vs, 0), ToUInt32(vs, 4)) { } 
 
     }
 
@@ -89,13 +90,13 @@ namespace mancala
         public PositionFileHeader Header { get; private set; }
         public Dictionary<PositionKey,PositionValue> PositionMapTable { get; private set; }
 
-        public PositionMap()
+        internal PositionMap()
         {
             PositionMapTable = new Dictionary<PositionKey, PositionValue>();
             Header = new PositionFileHeader();
         }
 
-        public void Load(string filePath)
+        internal void Load(string filePath)
         {          
             using (FileStream fs = new System.IO.FileStream(filePath, FileMode.Open))
             {
@@ -120,7 +121,7 @@ namespace mancala
             }
         }
 
-        public void Save(string filePath)
+        internal void Save(string filePath)
         {
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
@@ -143,12 +144,12 @@ namespace mancala
             }
         }
 
-        public int GetLength()
+        internal int GetLength()
         {
             return PositionMapTable.Count;
         }
 
-        public PositionValue? GetPositionValue(BoardState boardState)
+        internal PositionValue? GetPositionValue(BoardState boardState)
         {
             var turn = boardState.Turn;
             var opponent = boardState.GetOpponentTurn();
@@ -169,7 +170,7 @@ namespace mancala
             }
         }
 
-        public void Add(BoardState boardState,int value)
+        internal void Add(BoardState boardState,int value)
         {
             var turn = boardState.Turn;
             var opponent = boardState.GetOpponentTurn();

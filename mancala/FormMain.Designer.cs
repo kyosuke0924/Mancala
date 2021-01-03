@@ -1,4 +1,4 @@
-﻿namespace mancala
+﻿namespace Mancala
 {
     partial class FormMain
     {
@@ -829,7 +829,7 @@
             // 
             // dataHistoryBindingSource
             // 
-            this.dataHistoryBindingSource.DataSource = typeof(mancala.DataHistory);
+            this.dataHistoryBindingSource.DataSource = typeof(Mancala.FormMain.DataHistory);
             this.dataHistoryBindingSource.ListChanged += new System.ComponentModel.ListChangedEventHandler(this.DatahistoryBindingSource_ListChanged);
             // 
             // handDataGridViewTextBoxColumn
@@ -850,7 +850,7 @@
             // 
             // dataCandidateBindingSource
             // 
-            this.dataCandidateBindingSource.DataSource = typeof(mancala.DataCandidate);
+            this.dataCandidateBindingSource.DataSource = typeof(Mancala.FormMain.DataCandidate);
             // 
             // No
             // 
@@ -995,7 +995,6 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel7;
         private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn valuesDataGridViewTextBoxColumn;
         private System.Windows.Forms.BindingSource dataCandidateBindingSource;
         private System.Windows.Forms.Panel panel8;
         private System.Windows.Forms.DataGridView dataGridViewCandidates;
