@@ -12,7 +12,7 @@ namespace common
     {
         public Turn Turn { get; private set; }
         public int[] Stores { get; private set; }
-        public long[] Seed_states { get; set; }
+        public long[] Seed_states { get; private set; }
 
         public BoardState()
         {
@@ -26,6 +26,18 @@ namespace common
             Turn = boardState.Turn;
             Stores = (int[])boardState.Stores.Clone();
             Seed_states = (long[])boardState.Seed_states.Clone();
+        }
+
+        public BoardState(int[] firstSeeds,int[] secondSeeds) :this()
+        {
+            byte[] firstSeedsBytes = new byte[8];
+            byte[] secondSeedsBytes = new byte[8];
+            for (int i = 0; i < PIT_NUM; i++)
+            {
+                firstSeedsBytes[i] = (byte)firstSeeds[i];
+                secondSeedsBytes[i] = (byte)secondSeeds[i];
+            }
+            Seed_states = new long[] { BitConverter.ToInt64(firstSeedsBytes, 0), BitConverter.ToInt64(secondSeedsBytes, 0) };
         }
 
         /// <summary>
@@ -62,7 +74,7 @@ namespace common
         /// </summary>
         /// <param name="idx">pit位置</param>
         /// <returns>有効な手か</returns>
-        public Boolean CanPlay(int idx)
+        public bool CanPlay(int idx)
         {
             int seedNum = GetSeed(Turn, idx);
             int diffIdx = idx * (MAX_SEED_NUM + 1) + seedNum;
@@ -74,7 +86,7 @@ namespace common
         /// </summary>
         /// <param name="idx">pit位置</param>
         /// <returns>有効な手か</returns>
-        public Boolean Play(int idx)
+        public void Play(int idx)
         {
             int seedNum = GetSeed(Turn, idx);
             int diffIdx = idx * (MAX_SEED_NUM + 1) + seedNum;
@@ -108,8 +120,6 @@ namespace common
             {
                 Turn = opponent;
             }
-
-            return true;
         }
 
         /// <summary>
@@ -124,118 +134,4 @@ namespace common
 
     };
 
-
-    public class Board
-    {
-        public BoardState State { get; set; }
-        private Stack<BoardState> History { get; set; }
-
-        public Board()
-        {
-            Reset();
-        }
-
-        public Board(Board board)
-        {
-            State = new BoardState(board.State);
-            History = new Stack<BoardState>(board.History.Reverse());
-        }
-
-        /// <summary>
-        /// 局面を初期化する。
-        /// </summary>
-        public void Reset()
-        {
-            State = new BoardState();
-            History = new Stack<BoardState>(HISTORY_SIZE);
-        }
-
-        /// <summary>
-        /// 局面を初期化し、引数のseed状態をセットする。
-        /// </summary>
-        public void ResetWithSeeds(int[] firstSeeds,int[]secondSeeds)
-        {
-            byte[] firstSeedsBytes = new byte[8];
-            byte[] secondSeedsBytes = new byte[8];
-            for (int i = 0; i < PIT_NUM; i++)
-            {
-                firstSeedsBytes[i] = (byte)firstSeeds[i];
-                secondSeedsBytes[i] = (byte)secondSeeds[i];
-            }
-            Reset();
-            State.Seed_states = new long[] { BitConverter.ToInt64(firstSeedsBytes, 0), BitConverter.ToInt64(secondSeedsBytes, 0) };
-        }
-
-        /// <summary>
-        /// 現在の手番を返す
-        /// </summary>
-        /// <returns>現在の手番</returns>
-        public Turn GetTurn()
-        {
-            return State.Turn;
-        }
-
-
-        /// <summary>
-        /// storeにあるseedの個数を返す。
-        /// </summary>
-        /// <param name="turn">現在の手番</param>
-        /// <returns>storeにあるseedの個数</returns>
-        public int GetStore(Turn turn)
-        {
-            return State.Stores[(int)turn];
-        }
-
-        /// <summary>
-        /// 指定したpitのseedの個数を返す。
-        /// </summary>
-        /// <param name="turn">現在の手番</param>
-        /// <param name="idx">pitの位置</param>
-        /// <returns>seedの個数</returns>
-        public int GetSeed(Turn turn, int idx)
-        {
-            return State.GetSeed(turn, idx);
-        }
-
-        /// <summary>
-        /// ゲームが終了しているかどうかを返す。
-        /// </summary>
-        /// <returns>終了しているか</returns>
-        public Boolean IsOver()
-        {
-            return State.IsOver(); ;
-        }
-
-        /// <summary>
-        /// 有効な手かを返す
-        /// </summary>
-        /// <param name="idx">pit位置</param>
-        /// <returns>有効な手か</returns>
-        public Boolean CanPlay(int idx)
-        {
-            return State.CanPlay(idx);
-        }
-
-        /// <summary>
-        /// 一手戻す。初期局面では局面を戻せないのでNoneを返す。
-        /// </summary>
-        /// <returns>戻せたかどうか</returns>
-        public Boolean Undo()
-        {
-            if (History.Count == 0) return false;
-            State = new BoardState(History.Pop());
-            return true;
-        }
-
-        /// <summary>
-        /// 一手進める。ルール上有効な手ならtrueを、無効な手ならfalseを返す。
-        /// </summary>
-        /// <param name="idx">pit位置</param>
-        public void Play(int idx)
-        {
-            History.Push(new BoardState(State));
-            State.Play(idx);
-        }
-
-    }
 }

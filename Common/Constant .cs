@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace common
 {
 
-    public class Constant
+    public static class Constant
     {
 
         public enum Turn { First, Second };

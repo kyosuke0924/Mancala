@@ -13,20 +13,19 @@ namespace mancalaEngine
         internal const int VALUE_PER_SEED = 100;
         internal const int PATTERN_NUM = 60;
         internal const int PATTERN_SIZE = 15 * 15 * 15;
-        internal const int MAX_SEED = 48;
-        internal static readonly int[] SEED_TO_INDEX_0 = new int[MAX_SEED]
+        internal static readonly int[] SEED_TO_INDEX_0 = new int[Constant.MAX_SEED_NUM]
                                    {
                                          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
                                         14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
                                    };
 
-        internal static readonly int[] SEED_TO_INDEX_1 = new int[MAX_SEED]
+        internal static readonly int[] SEED_TO_INDEX_1 = new int[Constant.MAX_SEED_NUM]
                                    {
                                         0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210,
                                         210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210,
                                    };
 
-        internal static readonly int[] SEED_TO_INDEX_2 = new int[MAX_SEED]
+        internal static readonly int[] SEED_TO_INDEX_2 = new int[Constant.MAX_SEED_NUM]
                                    {
                                         0, 225, 450, 675, 900, 1125, 1350, 1575, 1800, 2025, 2250, 2475, 2700, 2925, 3150, 3150, 3150, 3150, 3150, 3150,
                                         3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150,

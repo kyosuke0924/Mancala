@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using common;
+using static common.Constant;
+
 
 
 namespace mancalaEngine
@@ -50,9 +51,10 @@ namespace mancalaEngine
             EndingMap.Load(ENDING_FILE_PATH);
         }
 
-        public (Move bestMove, int?[] values) FindBestMove(Board board, int depth, bool explore)
+        public (Move bestMove, int?[] values) FindBestMove(BoardState boardState, int depth, bool explore)
         {
-            (int value, int confidence)?[] movesValues = FindMovesValues(board, depth, explore);
+          
+            (int value, int confidence)?[] movesValues = FindMovesValues(boardState, depth, explore);
 
             Move bestMove = new Move(null, 0);
             var bestConfidence = -MAX_VALUE;
@@ -68,31 +70,31 @@ namespace mancalaEngine
             return (bestMove, movesValues.Select(x => x?.value).ToArray());
         }
 
-        private (int value, int confidence)?[] FindMovesValues(Board board, int depth, bool explore)
+        private (int value, int confidence)?[] FindMovesValues(BoardState boardState, int depth, bool explore)
         {
             (int value, int confidence)?[] movesValues = new (int value, int confidence)?[Constant.PIT_NUM];
 
             Parallel.For(0, movesValues.Length, i => {
-                movesValues[i] = CalcMoveValue(new Board(board), depth, explore,i);
+                movesValues[i] = CalcMoveValue(new BoardState(boardState), depth, explore,i);
             });
             return movesValues;
         }
 
-        private (int value,int confidence)? CalcMoveValue(Board board, int depth, bool explore,int i)
+        private (int value,int confidence)? CalcMoveValue(BoardState boardState, int depth, bool explore,int i)
         {
 
-            var turn = board.GetTurn();
-            var opponent = board.State.GetOpponentTurn();
+            var turn = boardState.Turn;
+            var opponent = boardState.GetOpponentTurn();
             var LogTotalSize = positionMap.GetLength();
             var upper = MAX_VALUE;
             var lower = -MAX_VALUE;
 
-            if (!board.CanPlay(i)) return null;
+            if (!boardState.CanPlay(i)) return null;
 
-            board.Play(i);
+            boardState.Play(i);
             (int value, int confidence)? positionMapResult = null;
 
-            var positionValue = positionMap.GetPositionValue(board.State);
+            var positionValue = positionMap.GetPositionValue(boardState);
             if (positionValue != null)
             {
                 if (!explore && positionValue.Value.Visit < MIN_VISIT)
@@ -101,7 +103,7 @@ namespace mancalaEngine
                 }
                 else
                 {
-                    int value = board.State.Turn == turn ? positionValue.Value.Value : -positionValue.Value.Value;
+                    int value = boardState.Turn == turn ? positionValue.Value.Value : -positionValue.Value.Value;
                     int confidence;
                     if (explore)
                     {
@@ -123,45 +125,50 @@ namespace mancalaEngine
             }
             else
             {
-                if (board.State.IsOver())
+                if (boardState.IsOver())
                 {
-                    result.value = (board.State.Stores[(int)turn] - board.State.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
+                    result.value = (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
                 }
                 else
                 {
-                    var endingValue = EndingMap.GetPositionValue(board.State);
+                    var endingValue = EndingMap.GetPositionValue(boardState);
 
                     if (endingValue != null)
                     {
-                        result.value = board.State.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
+                        result.value = boardState.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
                     }
                     else if (depth == 1)
                     {
-                        result.value = board.State.Turn == turn ? evaluator.Evaluate(board.State) : -evaluator.Evaluate(board.State);
+                        result.value = boardState.Turn == turn ? evaluator.Evaluate(boardState) : -evaluator.Evaluate(boardState);
                     }
                     else
                     {
-                        if (board.State.Turn == turn)
+                        Stack<BoardState> stackBoardStates = new Stack<BoardState>(MAX_SEED_NUM);
+                        stackBoardStates.Push(new BoardState(boardState));
+
+                        if (boardState.Turn == turn)
                         {
-                            result.value = Search(board, depth - 1, lower, upper).Value;
+                            result.value = Search(stackBoardStates, depth - 1, lower, upper).Value;
                         }
                         else
                         {
-                            result.value = -Search(board, depth - 1, -upper, -lower).Value;
+                            result.value = -Search(stackBoardStates, depth - 1, -upper, -lower).Value;
                         }
                     }
                 }
                 result.confidence = explore ? result.value + EXPLORE_BONUS : result.value;
             }
-            board.Undo();
 
             return (result.value, result.confidence);
         }
 
-        private Move Search(Board board, int depth, int lower, int upper)
+        private Move Search(Stack<BoardState> stackBoardStates, int depth, int lower, int upper)
         {
-            var turn = board.GetTurn();
-            var opponent = board.State.GetOpponentTurn();
+
+            BoardState boardState = stackBoardStates.Peek();
+
+            var turn = boardState.Turn;
+            var opponent = boardState.GetOpponentTurn();
             var maxValue = -MAX_VALUE;
             var lowerValue = lower;
             Move bestMove = new Move(null, maxValue);
@@ -172,9 +179,9 @@ namespace mancalaEngine
                 List<Move> candidates = new List<Move>();
                 for (int i = 0; i < Constant.PIT_NUM; i++)
                 {
-                    if (!board.CanPlay(i)) continue;
-                    int value = evaluator.Evaluate(board.State);
-                    candidates.Add(new Move(i, board.State.Turn == turn ? -value : value));
+                    if (!boardState.CanPlay(i)) continue;
+                    int value = evaluator.Evaluate(boardState);
+                    candidates.Add(new Move(i, boardState.Turn == turn ? -value : value));
                 }
                 moves = candidates.OrderByDescending(x => x.Value).Select(x => (int)x.Pit).ToList();
             }
@@ -182,46 +189,48 @@ namespace mancalaEngine
 
                 for (int i = Constant.PIT_NUM - 1; i >= 0; i--)
                 {
-                    if (board.GetSeed(turn,i) > 0) moves.Add(i);
+                    if (boardState.GetSeed(turn,i) > 0) moves.Add(i);
                 }
             }
 
             foreach (var i in moves)
             {
-                if (!board.CanPlay(i)) continue;
+                if (!boardState.CanPlay(i)) continue;
 
-                board.Play(i);
+                stackBoardStates.Push(new BoardState(boardState));
+                boardState.Play(i);
+
                 int value;
-                if (board.State.IsOver())
+                if (boardState.IsOver())
                 {
-                    value= (board.State.Stores[(int)turn] - board.State.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
+                    value= (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
                 }
                 else if (depth == 1)
                 {
-                    int v = evaluator.Evaluate(board.State);
-                    value = board.State.Turn == turn ? v : -v;
+                    int v = evaluator.Evaluate(boardState);
+                    value = boardState.Turn == turn ? v : -v;
                 }
                 else
                 {
-                    var endingValue = EndingMap.GetPositionValue(board.State);
+                    var endingValue = EndingMap.GetPositionValue(boardState);
                     if (endingValue != null)
                     {
-                        value = board.State.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
+                        value = boardState.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
                     }
                     else
                     {
-                        if (board.State.Turn == turn)
+                        if (boardState.Turn == turn)
                         {
-                            value = Search(board, depth - 1, lowerValue, upper).Value;
+                            value = Search(stackBoardStates, depth - 1, lowerValue, upper).Value;
                         }
                         else
                         {
-                            value = -Search(board, depth - 1, -upper, -lowerValue).Value;
+                            value = -Search(stackBoardStates, depth - 1, -upper, -lowerValue).Value;
                         }
                     }
 
                 }
-                board.Undo();
+                stackBoardStates.Pop();
 
                 if (value > maxValue)
                 {
@@ -236,7 +245,6 @@ namespace mancalaEngine
 
         public void MakeEndingFile(int seedNum)
         {
-            Board newBoard = new Board();
             positionMap = new PositionMap();
             EndingMap = new PositionMap();
 
@@ -257,9 +265,9 @@ namespace mancalaEngine
                         var secondSeeds = seeds.Skip(Constant.PIT_NUM).Take(Constant.PIT_NUM).ToArray();
                         if (firstSeeds.Sum() > 0 && secondSeeds.Sum() > 0)
                         {
-                            newBoard.ResetWithSeeds(firstSeeds, secondSeeds);
-                            int value = FindBestMove(newBoard, 1000, false).bestMove.Value;
-                            EndingMap.Add(newBoard.State, value);
+                            BoardState board = new BoardState(firstSeeds, secondSeeds);
+                            int value = FindBestMove(board, 1000, false).bestMove.Value;
+                            EndingMap.Add(board, value);
                         }
                         seeds[i] = 0;
                         while (true)

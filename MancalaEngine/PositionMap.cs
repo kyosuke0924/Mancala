@@ -116,7 +116,6 @@ namespace mancalaEngine
                     PositionKey key = new PositionKey(data.Take(16).ToArray());
                     PositionValue value = new PositionValue(data.Skip(16).Take(8).ToArray());
                     PositionMapTable.Add(key, value);
-                    //idx += readByte * 3;
                 }
             }
         }
@@ -130,16 +129,13 @@ namespace mancalaEngine
 
                 var headerBytes = header.ToLeBytes();
                 fs.Write(headerBytes,idx,headerBytes.Length);
-                //idx += headerBytes.Length;
 
                 foreach (var positionMap in PositionMapTable)
                 {
                     var positionMapKeyBytes = positionMap.Key.ToLeBytes();
                     var positionMapValueBytes = positionMap.Value.ToLeBytes();
                     fs.Write(positionMapKeyBytes,idx,positionMapKeyBytes.Length);
-                    //idx += positionMapKeyBytes.Length;
                     fs.Write(positionMapValueBytes,idx,positionMapValueBytes.Length);
-                    //idx += positionMapValueBytes.Length;
                 }
             }
         }
@@ -157,7 +153,7 @@ namespace mancalaEngine
 
             if (PositionMapTable.ContainsKey(key))
             {
-                PositionValue positionValue = (PositionValue)PositionMapTable[key];
+                PositionValue positionValue = PositionMapTable[key];
                 return new PositionValue
                     (
                           positionValue.Value + ((boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED)

@@ -10,14 +10,14 @@ namespace Mancala
 {
     public partial class FormEndingFile : Form
     {
-        private BindingList<DataEndingFile> dataEndingFile;
+        private BindingList<DataEndingFile> dataEndingFiles;
 
 
         public FormEndingFile(PositionMap positionMap)
         {
             InitializeComponent();
 
-            dataEndingFile = new BindingList<DataEndingFile>();
+            dataEndingFiles = new BindingList<DataEndingFile>();
 
             textBoxVer.Text = positionMap.Header.Version.ToString();
             textBoxCount.Text = positionMap.Header.RecordNum.ToString();
@@ -26,10 +26,10 @@ namespace Mancala
             foreach (KeyValuePair<PositionKey,PositionValue> item in positionMap.PositionMapTable)
             {
                 i++;
-                dataEndingFile.Add(new DataEndingFile(i,item));
+                dataEndingFiles.Add(new DataEndingFile(i,item));
             }
 
-            dataGridViewEndingFile.DataSource = dataEndingFile;
+            dataGridViewEndingFile.DataSource = dataEndingFiles;
 
         }
 
