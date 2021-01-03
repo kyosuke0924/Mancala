@@ -15,7 +15,7 @@ namespace common
         public const int PIT_NUM = 6;
         public const int PIT_BIT_NUM = 8;
         public const long PIT_BIT_MASK = 0xff;
-        public const long INITIAL_SEEDS = 0x040404040404; //下位バイトからstoreから遠いpitを示す
+        public const long INITIAL_SEEDS = 0x040404040404; //下位バイトからstoreから遠いpitを示す。
         public const long EMPTY_SEEDS = 0;
         public const int MAX_SEED_NUM = 48;
         public const int HISTORY_SIZE = MAX_SEED_NUM * 3;
