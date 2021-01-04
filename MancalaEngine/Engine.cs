@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using common;
-using static common.Constant;
+using Common.Constant;
+using Common.BoardState;
 
-
-
-namespace mancalaEngine
+namespace MancalaEngine
 {
     public readonly struct Move
     {
@@ -21,31 +19,34 @@ namespace mancalaEngine
         }
     }
 
-    public class MancalaEngine
+    public class Engine
     {
         private const string EVALUATION_FILE_PATH = "eval.dat";
         private const string POSITION_FILE_PATH = "position.dat";
         private const string ENDING_FILE_PATH = "ending.dat";
 
-        private const int  MIN_VISIT = 10;
-        private const double CONFIDENCE_SCALE = 32.0 * EvaluatorConst.VALUE_PER_SEED;
+        private const int VALUE_PER_SEED = 100;
+        private const int MIN_VISIT = 10;
+        private const double CONFIDENCE_SCALE = 32.0 * VALUE_PER_SEED;
         private const int MAX_VALUE = 100000;
         private const int EXPLORE_BONUS = 50000;
 
+        private readonly int pitNum;
         private Evaluator evaluator;
         private PositionMap positionMap;
         public PositionMap EndingMap { get; private set; }
 
-        public MancalaEngine()
+        public Engine(int pitNum)
         {
+            this.pitNum = pitNum;
             LoadFiles();
         }
 
         public void LoadFiles()
         {
-            evaluator = new Evaluator();
-            positionMap = new PositionMap();
-            EndingMap = new PositionMap();
+            evaluator = new Evaluator(VALUE_PER_SEED);
+            positionMap = new PositionMap(VALUE_PER_SEED);
+            EndingMap = new PositionMap(VALUE_PER_SEED);
             evaluator.Load(EVALUATION_FILE_PATH);
             positionMap.Load(POSITION_FILE_PATH);
             EndingMap.Load(ENDING_FILE_PATH);
@@ -72,7 +73,7 @@ namespace mancalaEngine
 
         private (int value, int confidence)?[] FindMovesValues(BoardState boardState, int depth, bool explore)
         {
-            (int value, int confidence)?[] movesValues = new (int value, int confidence)?[Constant.PIT_NUM];
+            (int value, int confidence)?[] movesValues = new (int value, int confidence)?[pitNum];
 
             Parallel.For(0, movesValues.Length, i => {
                 movesValues[i] = CalcMoveValue(new BoardState(boardState), depth, explore,i);
@@ -83,7 +84,7 @@ namespace mancalaEngine
         private (int value,int confidence)? CalcMoveValue(BoardState boardState, int depth, bool explore,int i)
         {
 
-            var turn = boardState.Turn;
+            var turn = boardState.ThisTurn;
             var opponent = boardState.GetOpponentTurn();
             var LogTotalSize = positionMap.GetLength();
             var upper = MAX_VALUE;
@@ -103,7 +104,7 @@ namespace mancalaEngine
                 }
                 else
                 {
-                    int value = boardState.Turn == turn ? positionValue.Value.Value : -positionValue.Value.Value;
+                    int value = boardState.ThisTurn == turn ? positionValue.Value.Value : -positionValue.Value.Value;
                     int confidence;
                     if (explore)
                     {
@@ -127,7 +128,7 @@ namespace mancalaEngine
             {
                 if (boardState.IsOver())
                 {
-                    result.value = (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
+                    result.value = (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * VALUE_PER_SEED;
                 }
                 else
                 {
@@ -135,18 +136,18 @@ namespace mancalaEngine
 
                     if (endingValue != null)
                     {
-                        result.value = boardState.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
+                        result.value = boardState.ThisTurn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
                     }
                     else if (depth == 1)
                     {
-                        result.value = boardState.Turn == turn ? evaluator.Evaluate(boardState) : -evaluator.Evaluate(boardState);
+                        result.value = boardState.ThisTurn == turn ? evaluator.Evaluate(boardState) : -evaluator.Evaluate(boardState);
                     }
                     else
                     {
-                        Stack<BoardState> stackBoardStates = new Stack<BoardState>(MAX_SEED_NUM);
+                        Stack<BoardState> stackBoardStates = new Stack<BoardState>(BoardInfo.MAX_SEED_NUM);
                         stackBoardStates.Push(new BoardState(boardState));
 
-                        if (boardState.Turn == turn)
+                        if (boardState.ThisTurn == turn)
                         {
                             result.value = Search(stackBoardStates, depth - 1, lower, upper).Value;
                         }
@@ -167,7 +168,7 @@ namespace mancalaEngine
 
             BoardState boardState = stackBoardStates.Peek();
 
-            var turn = boardState.Turn;
+            var turn = boardState.ThisTurn;
             var opponent = boardState.GetOpponentTurn();
             var maxValue = -MAX_VALUE;
             var lowerValue = lower;
@@ -177,17 +178,17 @@ namespace mancalaEngine
             if (depth >= 4)
             {
                 List<Move> candidates = new List<Move>();
-                for (int i = 0; i < Constant.PIT_NUM; i++)
+                for (int i = 0; i < pitNum; i++)
                 {
                     if (!boardState.CanPlay(i)) continue;
                     int value = evaluator.Evaluate(boardState);
-                    candidates.Add(new Move(i, boardState.Turn == turn ? -value : value));
+                    candidates.Add(new Move(i, boardState.ThisTurn == turn ? -value : value));
                 }
                 moves = candidates.OrderByDescending(x => x.Value).Select(x => (int)x.Pit).ToList();
             }
             else {
 
-                for (int i = Constant.PIT_NUM - 1; i >= 0; i--)
+                for (int i = pitNum - 1; i >= 0; i--)
                 {
                     if (boardState.GetSeed(turn,i) > 0) moves.Add(i);
                 }
@@ -203,23 +204,23 @@ namespace mancalaEngine
                 int value;
                 if (boardState.IsOver())
                 {
-                    value= (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED;
+                    value= (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * VALUE_PER_SEED;
                 }
                 else if (depth == 1)
                 {
                     int v = evaluator.Evaluate(boardState);
-                    value = boardState.Turn == turn ? v : -v;
+                    value = boardState.ThisTurn == turn ? v : -v;
                 }
                 else
                 {
                     var endingValue = EndingMap.GetPositionValue(boardState);
                     if (endingValue != null)
                     {
-                        value = boardState.Turn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
+                        value = boardState.ThisTurn == turn ? endingValue.Value.Value : -endingValue.Value.Value;
                     }
                     else
                     {
-                        if (boardState.Turn == turn)
+                        if (boardState.ThisTurn == turn)
                         {
                             value = Search(stackBoardStates, depth - 1, lowerValue, upper).Value;
                         }
@@ -245,10 +246,10 @@ namespace mancalaEngine
 
         public void MakeEndingFile(int seedNum)
         {
-            positionMap = new PositionMap();
-            EndingMap = new PositionMap();
+            positionMap = new PositionMap(VALUE_PER_SEED);
+            EndingMap = new PositionMap(VALUE_PER_SEED);
 
-            int[] seeds = new int[Constant.PIT_NUM * 2];
+            int[] seeds = new int[pitNum * 2];
 
             for (int max = 2; max < seedNum + 1; max++)
             {
@@ -261,8 +262,8 @@ namespace mancalaEngine
                     if (remain == 0 | i == seeds.Length - 1)
                     {
                         seeds[i] = remain;
-                        var firstSeeds = seeds.Take(Constant.PIT_NUM).ToArray();
-                        var secondSeeds = seeds.Skip(Constant.PIT_NUM).Take(Constant.PIT_NUM).ToArray();
+                        var firstSeeds = seeds.Take(pitNum).ToArray();
+                        var secondSeeds = seeds.Skip(pitNum).Take(pitNum).ToArray();
                         if (firstSeeds.Sum() > 0 && secondSeeds.Sum() > 0)
                         {
                             BoardState board = new BoardState(firstSeeds, secondSeeds);

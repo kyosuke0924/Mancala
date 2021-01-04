@@ -1,14 +1,10 @@
-﻿using common;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static System.BitConverter;
+using Common.BoardState;
 
-namespace mancalaEngine
+namespace MancalaEngine
 {
 
     public struct PositionKey
@@ -42,7 +38,6 @@ namespace mancalaEngine
         }
 
         internal PositionKey(byte[] vs) : this(ToInt64(vs, 0), ToInt64(vs, 8)) { }
-
     }
 
     public struct PositionValue
@@ -62,7 +57,6 @@ namespace mancalaEngine
         }
 
         internal PositionValue(byte[] vs) : this(ToInt32(vs, 0), ToInt32(vs, 4)) { } 
-
     }
 
     public struct PositionFileHeader
@@ -82,16 +76,17 @@ namespace mancalaEngine
         }
 
         internal PositionFileHeader(byte[] vs) :this(ToUInt32(vs, 0), ToUInt32(vs, 4)) { } 
-
     }
 
     public class PositionMap
     {
+        private readonly int valuePerSeed;
         public PositionFileHeader Header { get; private set; }
         public Dictionary<PositionKey,PositionValue> PositionMapTable { get; private set; }
 
-        internal PositionMap()
+        internal PositionMap(int valuePerSeed)
         {
+            this.valuePerSeed = valuePerSeed;
             PositionMapTable = new Dictionary<PositionKey, PositionValue>();
             Header = new PositionFileHeader();
         }
@@ -147,7 +142,7 @@ namespace mancalaEngine
 
         internal PositionValue? GetPositionValue(BoardState boardState)
         {
-            var turn = boardState.Turn;
+            var turn = boardState.ThisTurn;
             var opponent = boardState.GetOpponentTurn();
             var key = new PositionKey(boardState.Seed_states[(int)turn], boardState.Seed_states[(int)opponent]) ;
 
@@ -156,7 +151,7 @@ namespace mancalaEngine
                 PositionValue positionValue = PositionMapTable[key];
                 return new PositionValue
                     (
-                          positionValue.Value + ((boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED)
+                          positionValue.Value + ((boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * valuePerSeed)
                         , positionValue.Visit
                     );
             }
@@ -168,7 +163,7 @@ namespace mancalaEngine
 
         internal void Add(BoardState boardState,int value)
         {
-            var turn = boardState.Turn;
+            var turn = boardState.ThisTurn;
             var opponent = boardState.GetOpponentTurn();
             var key = new PositionKey(boardState.Seed_states[(int)turn], boardState.Seed_states[(int)opponent]);
             var positionValue = GetPositionValue(boardState);
@@ -177,11 +172,9 @@ namespace mancalaEngine
             if (positionValue != null) visit = positionValue.Value.Visit;
 
             var newPositionValue = new PositionValue
-                (value - (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED, visit += 1);
+                (value - (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * valuePerSeed, visit += 1);
 
             PositionMapTable.Add(key, newPositionValue);
         }
-
     }
-    
 }

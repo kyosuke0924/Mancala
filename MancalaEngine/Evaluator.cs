@@ -1,49 +1,45 @@
-﻿using common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Common.Constant;
+using Common.BoardState;
 
-namespace mancalaEngine
+namespace MancalaEngine
 {
-    static internal class EvaluatorConst
+    internal class Evaluator
     {
-        internal const int VALUE_PER_SEED = 100;
-        internal const int PATTERN_NUM = 60;
-        internal const int PATTERN_SIZE = 15 * 15 * 15;
-        internal static readonly int[] SEED_TO_INDEX_0 = new int[Constant.MAX_SEED_NUM]
+        private const int PATTERN_NUM = 60;
+        private const int PATTERN_SIZE = 15 * 15 * 15;
+        private static readonly int[] SEED_TO_INDEX_0 = new int[BoardInfo.MAX_SEED_NUM]
                                    {
                                          0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
                                         14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14, 14,
                                    };
 
-        internal static readonly int[] SEED_TO_INDEX_1 = new int[Constant.MAX_SEED_NUM]
+        private static readonly int[] SEED_TO_INDEX_1 = new int[BoardInfo.MAX_SEED_NUM]
                                    {
                                         0, 15, 30, 45, 60, 75, 90, 105, 120, 135, 150, 165, 180, 195, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210,
                                         210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210, 210,
                                    };
 
-        internal static readonly int[] SEED_TO_INDEX_2 = new int[Constant.MAX_SEED_NUM]
+        private static readonly int[] SEED_TO_INDEX_2 = new int[BoardInfo.MAX_SEED_NUM]
                                    {
                                         0, 225, 450, 675, 900, 1125, 1350, 1575, 1800, 2025, 2250, 2475, 2700, 2925, 3150, 3150, 3150, 3150, 3150, 3150,
                                         3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150,
                                         3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150, 3150,
                                    };
-    }
 
+        private readonly int valuePerSeed;
+        private readonly List<List<int>> patternValues;
 
-    internal class Evaluator
-    {
-        private List<List<int>> Pattern_values { set; get;}
-
-        internal Evaluator()
+        internal Evaluator(int valuePerSeed)
         {
-            Pattern_values = new List<List<int>>(EvaluatorConst.PATTERN_NUM);
-            for (int i = 0; i < EvaluatorConst.PATTERN_NUM; i++)
+            this.valuePerSeed = valuePerSeed;
+            patternValues = new List<List<int>>(PATTERN_NUM);
+            for (int i = 0; i < PATTERN_NUM; i++)
             {
-                Pattern_values.Add(new List<int>(Enumerable.Repeat(0, EvaluatorConst.PATTERN_SIZE)));
+                patternValues.Add(new List<int>(Enumerable.Repeat(0, PATTERN_SIZE)));
             }
         }
 
@@ -55,14 +51,13 @@ namespace mancalaEngine
                 int idx = 0;
                 int readByte = 4;
                
-                for (int i = 0; i < EvaluatorConst.PATTERN_NUM; i++)
+                for (int i = 0; i < PATTERN_NUM; i++)
                 {
-                    for (int j = 0; j < EvaluatorConst.PATTERN_SIZE; j++)
+                    for (int j = 0; j < PATTERN_SIZE; j++)
                     {
                         byte[] data = new byte[readByte];
                         fs.Read(data, idx, readByte);
-                        Pattern_values[i][j] = BitConverter.ToInt32(data, 0);
-                        //idx += readByte;
+                        patternValues[i][j] = BitConverter.ToInt32(data, 0);
                     }
                 }
             }
@@ -78,94 +73,89 @@ namespace mancalaEngine
 
         internal int Evaluate(BoardState boardState)
         {
-            var turn = boardState.Turn;
+            var turn = boardState.ThisTurn;
             var opponent = boardState.GetOpponentTurn();
             var seeds = BitConverter.GetBytes(boardState.Seed_states[(int)turn]);
             var opponent_seeds = BitConverter.GetBytes(boardState.Seed_states[(int)opponent]);
 
             int value = 0;
 
-            value += Pattern_values[0][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[5]]];
-            value += Pattern_values[1][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[4]]];
-            value += Pattern_values[2][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[4]]];
-            value += Pattern_values[3][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[4]]];
+            value += patternValues[0][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[1]] + SEED_TO_INDEX_2[opponent_seeds[5]]];
+            value += patternValues[1][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[1]] + SEED_TO_INDEX_2[opponent_seeds[4]]];
+            value += patternValues[2][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[4]]];
+            value += patternValues[3][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[4]]];
 
-            value += Pattern_values[4][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[5]]];
-            value += Pattern_values[5][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
-            value += Pattern_values[6][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
-            value += Pattern_values[7][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[4][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[2]] + SEED_TO_INDEX_2[opponent_seeds[5]]];
+            value += patternValues[5][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[2]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[6][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[7][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
 
-            value += Pattern_values[8][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[5]]];
-            value += Pattern_values[9][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
-            value += Pattern_values[10][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
-            value += Pattern_values[11][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[8][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[5]]];
+            value += patternValues[9][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[10][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[11][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
 
-            value += Pattern_values[12][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[5]]];
-            value += Pattern_values[13][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[14][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[15][EvaluatorConst.SEED_TO_INDEX_0[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[12][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[5]]];
+            value += patternValues[13][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[14][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[15][SEED_TO_INDEX_0[seeds[4]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
 
-            value += Pattern_values[16][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[5]]];
-            value += Pattern_values[17][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[18][EvaluatorConst.SEED_TO_INDEX_0[seeds[0]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[19][EvaluatorConst.SEED_TO_INDEX_0[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[16][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[5]]];
+            value += patternValues[17][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[18][SEED_TO_INDEX_0[seeds[0]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[19][SEED_TO_INDEX_0[seeds[5]] + SEED_TO_INDEX_1[opponent_seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
 
-            value += Pattern_values[20][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[4]]];
-            value += Pattern_values[21][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
-            value += Pattern_values[22][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
-            value += Pattern_values[23][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[20][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[seeds[2]] + SEED_TO_INDEX_2[opponent_seeds[4]]];
+            value += patternValues[21][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[seeds[2]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[22][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[opponent_seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[23][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[opponent_seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
 
-            value += Pattern_values[24][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[4]]];
-            value += Pattern_values[25][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
-            value += Pattern_values[26][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
-            value += Pattern_values[27][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[24][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[4]]];
+            value += patternValues[25][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[26][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[opponent_seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[27][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[opponent_seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
 
-            value += Pattern_values[28][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[4]]];
-            value += Pattern_values[29][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[30][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[31][EvaluatorConst.SEED_TO_INDEX_0[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[28][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[4]]];
+            value += patternValues[29][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[30][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[opponent_seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[31][SEED_TO_INDEX_0[seeds[4]] + SEED_TO_INDEX_1[opponent_seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
 
-            value += Pattern_values[32][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[4]]];
-            value += Pattern_values[33][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[34][EvaluatorConst.SEED_TO_INDEX_0[seeds[1]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[35][EvaluatorConst.SEED_TO_INDEX_0[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[32][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[4]]];
+            value += patternValues[33][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[34][SEED_TO_INDEX_0[seeds[1]] + SEED_TO_INDEX_1[opponent_seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[35][SEED_TO_INDEX_0[seeds[5]] + SEED_TO_INDEX_1[opponent_seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
 
-            value += Pattern_values[36][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
-            value += Pattern_values[37][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
-            value += Pattern_values[38][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
-            value += Pattern_values[39][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[36][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[37][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[38][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[opponent_seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[39][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[opponent_seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
 
-            value += Pattern_values[40][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
-            value += Pattern_values[41][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[42][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[43][EvaluatorConst.SEED_TO_INDEX_0[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[40][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[41][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[42][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[opponent_seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[43][SEED_TO_INDEX_0[seeds[4]] + SEED_TO_INDEX_1[opponent_seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
 
-            value += Pattern_values[44][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[3]]];
-            value += Pattern_values[45][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[46][EvaluatorConst.SEED_TO_INDEX_0[seeds[2]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[47][EvaluatorConst.SEED_TO_INDEX_0[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[3]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[44][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[3]]];
+            value += patternValues[45][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[46][SEED_TO_INDEX_0[seeds[2]] + SEED_TO_INDEX_1[opponent_seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[47][SEED_TO_INDEX_0[seeds[5]] + SEED_TO_INDEX_1[opponent_seeds[3]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
 
-            value += Pattern_values[48][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
-            value += Pattern_values[49][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[50][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[2]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[51][EvaluatorConst.SEED_TO_INDEX_0[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[2]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[48][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[49][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[seeds[4]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[50][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[opponent_seeds[2]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[51][SEED_TO_INDEX_0[seeds[4]] + SEED_TO_INDEX_1[opponent_seeds[2]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
 
-            value += Pattern_values[52][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[2]]];
-            value += Pattern_values[53][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[54][EvaluatorConst.SEED_TO_INDEX_0[seeds[3]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[2]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[55][EvaluatorConst.SEED_TO_INDEX_0[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[2]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[52][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[2]]];
+            value += patternValues[53][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[54][SEED_TO_INDEX_0[seeds[3]] + SEED_TO_INDEX_1[opponent_seeds[2]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[55][SEED_TO_INDEX_0[seeds[5]] + SEED_TO_INDEX_1[opponent_seeds[2]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
 
-            value += Pattern_values[56][EvaluatorConst.SEED_TO_INDEX_0[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[1]]];
-            value += Pattern_values[57][EvaluatorConst.SEED_TO_INDEX_0[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_1[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[58][EvaluatorConst.SEED_TO_INDEX_0[seeds[4]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[1]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
-            value += Pattern_values[59][EvaluatorConst.SEED_TO_INDEX_0[seeds[5]] + EvaluatorConst.SEED_TO_INDEX_1[opponent_seeds[1]] + EvaluatorConst.SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[56][SEED_TO_INDEX_0[seeds[4]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[1]]];
+            value += patternValues[57][SEED_TO_INDEX_0[seeds[4]] + SEED_TO_INDEX_1[seeds[5]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[58][SEED_TO_INDEX_0[seeds[4]] + SEED_TO_INDEX_1[opponent_seeds[1]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
+            value += patternValues[59][SEED_TO_INDEX_0[seeds[5]] + SEED_TO_INDEX_1[opponent_seeds[1]] + SEED_TO_INDEX_2[opponent_seeds[0]]];
 
-            return (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * EvaluatorConst.VALUE_PER_SEED + value;
-
+            return (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * valuePerSeed + value;
         }
-
-
     }
-
-
 }

@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Evaluator.cs" />
-    <Compile Include="MancalaEngine.cs" />
+    <Compile Include="Engine.cs" />
     <Compile Include="PositionMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

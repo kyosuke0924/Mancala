@@ -1,26 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Windows.Forms.DataVisualization.Charting;
-using common;
-using static common.Constant;
-using mancalaEngine;
+using Common.Constant;
 
 namespace Mancala
 {
     public partial class FormMain : Form
     {
 
-        const int DEPTH = 14;
+        private const int PLAYER_NUM = 2;
 
-        private Board board;
-        private Move bestMove;
+        private int depth = Properties.Settings.Default.Depth;
+        private int endingFileSeedNum = Properties.Settings.Default.EndingFileSeedNum;
+
+        private BoardManager boardManager;
+        private int? bestMoveIdx;
 
         private readonly Button[,] pits;
         private readonly Label[] labelSrores;
@@ -31,10 +26,10 @@ namespace Mancala
         public FormMain()
         {
             InitializeComponent();
-            board = new Board();
+            boardManager = new BoardManager();
 
             //ピットボタンの配列を作成し、イベントハンドラに関連付け
-            pits = new Button[PLAYER_NUM,PIT_NUM] { {buttonS_0, buttonS_1, buttonS_2, buttonS_3, buttonS_4, buttonS_5 } ,
+            pits = new Button[PLAYER_NUM, BoardInfo.PIT_NUM] { {buttonS_0, buttonS_1, buttonS_2, buttonS_3, buttonS_4, buttonS_5 } ,
                                                     {buttonN_0, buttonN_1, buttonN_2, buttonN_3, buttonN_4, buttonN_5 } };
             foreach (Button button in pits) button.Click += new EventHandler(Pits_Click);
 
@@ -46,7 +41,7 @@ namespace Mancala
         {
             dataGridViewHistory.Columns[3].HeaderCell.Style.WrapMode = DataGridViewTriState.True;
             dataGridViewHistory.Columns[4].HeaderCell.Style.WrapMode = DataGridViewTriState.True;
-            SetMovesValues(board.FindBestMove(DEPTH, false));
+            SetMovesValues(boardManager.FindBestMove(depth, false));
             DisplayBoard();
         }
 
@@ -74,10 +69,10 @@ namespace Mancala
                     buttonQuit.PerformClick();
                     break;
                 case Keys i when (Keys.D1 <= i && i <= Keys.D6):
-                    pits[(int)board.GetTurn() ^ r,(int)i - (int)Keys.D1].PerformClick();
+                    pits[(int)boardManager.GetTurn() ^ r,(int)i - (int)Keys.D1].PerformClick();
                     break;
                 case Keys i when (Keys.NumPad1 <= i && i <= Keys.NumPad6):
-                    pits[(int)board.GetTurn() ^ r, (int)i - (int)Keys.NumPad1].PerformClick();
+                    pits[(int)boardManager.GetTurn() ^ r, (int)i - (int)Keys.NumPad1].PerformClick();
                     break;
             }
             e.Handled = true;
@@ -85,33 +80,33 @@ namespace Mancala
 
         private void Pits_Click(object sender, EventArgs e)
         {
-            Turn thisTurn = board.GetTurn();
+            Turn thisTurn = boardManager.GetTurn();
             int pitIdx = GetPitIdx((Button)sender);
 
-            if (board.CanPlay(pitIdx))
+            if (boardManager.CanPlay(pitIdx))
             {
                 string value = ((DataCandidate)dataCandidateBindingSource[pitIdx]).Values;
-                board.Play(pitIdx);
-                SetMovesValues(board.FindBestMove(DEPTH, false));
+                boardManager.Play(pitIdx);
+                SetMovesValues(boardManager.FindBestMove(depth, false));
                 DisplayBoard();
-                dataHistoryBindingSource.Add(new DataHistory(dataHistoryBindingSource.Count + 1, thisTurn, pitIdx, board, value));               
+                dataHistoryBindingSource.Add(new DataHistory(dataHistoryBindingSource.Count + 1, thisTurn, pitIdx, boardManager, value));               
                 dataGridViewHistory.Rows[dataGridViewHistory.Rows.Count - 1].Selected = true;
                 dataGridViewHistory.FirstDisplayedScrollingRowIndex = dataGridViewHistory.Rows.Count - 1;
             }
         }
 
-        private void SetMovesValues((Move bestMove, int?[] values) p)
+        private void SetMovesValues((int? bestMoveIdx, int?[] values) p)
         {
-            bestMove = p.bestMove;
+            bestMoveIdx = p.bestMoveIdx;
             dataCandidateBindingSource.Clear();
             for (int i = 0; i < p.values.Length; i++)
             {
-                dataCandidateBindingSource.Add(new DataCandidate(board.GetTurn(), i, p.values[i]));
+                dataCandidateBindingSource.Add(new DataCandidate(boardManager.GetTurn(), i, p.values[i]));
             }
-            if (bestMove.Pit != null) { dataGridViewCandidates.Rows[(int)bestMove.Pit].Selected = true; }
+            if (bestMoveIdx != null) { dataGridViewCandidates.Rows[(int)bestMoveIdx].Selected = true; }
         }
 
-        private int GetPitIdx(System.Windows.Forms.Button button)
+        private int GetPitIdx(Button button)
         {
             for (int i = 0; i < this.pits.GetLength(0); i++)
             {
@@ -132,17 +127,17 @@ namespace Mancala
 
             for (int i = 0; i < labelSrores.Length; i++)
             {
-                labelSrores[i ^ r].Text = board.GetStore((Turn)Enum.ToObject(typeof(Turn), i)).ToString();
+                labelSrores[i ^ r].Text = boardManager.GetStore((Turn)Enum.ToObject(typeof(Turn), i)).ToString();
             }
 
             for (int i = 0; i < this.pits.GetLength(0); i++)
             {
                 for (int j = 0; j < this.pits.GetLength(1); j++)
                 {
-                    int seedNum = board.GetSeed((Turn)Enum.ToObject(typeof(Turn), i), j);
+                    int seedNum = boardManager.GetSeed((Turn)Enum.ToObject(typeof(Turn), i), j);
                     pits[i ^ r, j].Text = seedNum > 0 ? seedNum.ToString() : "";
-                    pits[i ^ r, j].Enabled = i == (int)board.GetTurn();
-                    if (i == (int)board.GetTurn() && bestMove.Pit == j)
+                    pits[i ^ r, j].Enabled = i == (int)boardManager.GetTurn();
+                    if (i == (int)boardManager.GetTurn() && bestMoveIdx != null && bestMoveIdx == j)
                     {
                         pits[i ^ r, j].BackColor = SystemColors.Highlight;
                         pits[i ^ r, j].Focus();
@@ -160,8 +155,8 @@ namespace Mancala
         {
             if (MessageBox.Show(this, "リセットしますか？", "リセット", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.OK)
             {
-                board.Reset();
-                SetMovesValues(board.FindBestMove(DEPTH, false));
+                boardManager.Reset();
+                SetMovesValues(boardManager.FindBestMove(depth, false));
                 DisplayBoard();
                 dataHistoryBindingSource.Clear();
             }     
@@ -169,10 +164,10 @@ namespace Mancala
 
         private void ButtonUndo_Click(object sender, EventArgs e)
         {
-            Boolean result = board.Undo();
+            Boolean result = boardManager.Undo();
             if (result)
             {
-                SetMovesValues(board.FindBestMove(DEPTH, false));
+                SetMovesValues(boardManager.FindBestMove(depth, false));
                 DisplayBoard();
                 dataHistoryBindingSource.RemoveAt(dataHistoryBindingSource.Count - 1);
                 if (dataGridViewHistory.Rows.Count > 0)
@@ -191,12 +186,12 @@ namespace Mancala
 
         private void ButtonMakeEndingFile_Click(object sender, EventArgs e)
         {
-            board.MakeEndingFile(10);
+            boardManager.MakeEndingFile(endingFileSeedNum);
         }
 
         private void ButtonShowEndingFile_Click(object sender, EventArgs e)
         {
-            FormEndingFile formEndingFile = new FormEndingFile(board.GetEndingMap());
+            FormEndingFile formEndingFile = new FormEndingFile(boardManager.GetEndingMap());
             formEndingFile.Show(this);
         }
 
@@ -216,7 +211,7 @@ namespace Mancala
         private class DataHistory
         {
             public int No { get; set; }
-            public string Turn { get; set; }
+            public string ThisTurn { get; set; }
             public string Hand { get; set; }
             public int FirstStore { get; set; }
             public int SecondStore { get; set; }
@@ -224,15 +219,15 @@ namespace Mancala
             public string SecondBoardState { get; set; }
             public int Value { get; set; }
 
-            public DataHistory(int no, Turn thisTurn, int pidIdx, Board board ,string value)
+            public DataHistory(int no, Turn thisTurn, int pidIdx, BoardManager boardManager ,string value)
             {
                 No = no;
-                Turn = thisTurn == Constant.Turn.First ? "先手" : "後手";
+                ThisTurn = thisTurn == Turn.First ? "先手" : "後手";
                 Hand = "(" + (pidIdx + 1).ToString() + ")";
-                FirstStore = board.GetStore(Constant.Turn.First);
-                SecondStore = board.GetStore(Constant.Turn.Second);
-                FirstBoardState = String.Join(" ", board.GetSeedArray(Constant.Turn.First));
-                SecondBoardState = String.Join(" ", board.GetSeedArray(Constant.Turn.Second));
+                FirstStore = boardManager.GetStore(Turn.First);
+                SecondStore = boardManager.GetStore(Turn.Second);
+                FirstBoardState = String.Join(" ", boardManager.GetSeedArray(Turn.First));
+                SecondBoardState = String.Join(" ", boardManager.GetSeedArray(Turn.Second));
                 Value = Convert.ToInt32(value);
             }
         }
@@ -245,7 +240,7 @@ namespace Mancala
             public DataCandidate(Turn thisTurn, int pidIdx, int? v)
             {
                 Hand = "(" + (pidIdx + 1).ToString() + ")";
-                Values = v == null ? "*****" : thisTurn == Constant.Turn.First ? v.ToString() : (-v).ToString();
+                Values = v == null ? "*****" : thisTurn == Turn.First ? v.ToString() : (-v).ToString();
             }
         }
 

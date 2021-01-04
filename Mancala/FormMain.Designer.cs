@@ -29,13 +29,17 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle17 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle18 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea5 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.StripLine stripLine5 = new System.Windows.Forms.DataVisualization.Charting.StripLine();
-            System.Windows.Forms.DataVisualization.Charting.Series series5 = new System.Windows.Forms.DataVisualization.Charting.Series();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle19 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle20 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.StripLine stripLine1 = new System.Windows.Forms.DataVisualization.Charting.StripLine();
+            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelN = new System.Windows.Forms.Label();
             this.labelS = new System.Windows.Forms.Label();
@@ -76,14 +80,6 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.dataGridViewHistory = new System.Windows.Forms.DataGridView();
-            this.No = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Turn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Hand = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FirstStore = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SecondStore = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.FirstBoardState = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.SecondBoardState = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Value = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel5 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
@@ -95,12 +91,20 @@
             this.label15 = new System.Windows.Forms.Label();
             this.panel7 = new System.Windows.Forms.Panel();
             this.dataGridViewCandidates = new System.Windows.Forms.DataGridView();
-            this.handDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.valuesGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataCandidateBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.panel9 = new System.Windows.Forms.Panel();
             this.label14 = new System.Windows.Forms.Label();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.dataGridViewHistoryNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewHistoryThisTurn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewHistoryHand = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewHistoryFirstStore = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewHistorySecondStore = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewHistoryFirstBoardState = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewHistorySecondBoardState = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataGridViewHistoryValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.handDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.valuesGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -618,34 +622,34 @@
             this.dataGridViewHistory.AllowUserToResizeRows = false;
             this.dataGridViewHistory.AutoGenerateColumns = false;
             this.dataGridViewHistory.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            dataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle17.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            dataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle17.SelectionBackColor = System.Drawing.Color.Transparent;
-            dataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewHistory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle17;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewHistory.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewHistory.ColumnHeadersHeight = 46;
             this.dataGridViewHistory.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridViewHistory.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.No,
-            this.Turn,
-            this.Hand,
-            this.FirstStore,
-            this.SecondStore,
-            this.FirstBoardState,
-            this.SecondBoardState,
-            this.Value});
+            this.dataGridViewHistoryNo,
+            this.dataGridViewHistoryThisTurn,
+            this.dataGridViewHistoryHand,
+            this.dataGridViewHistoryFirstStore,
+            this.dataGridViewHistorySecondStore,
+            this.dataGridViewHistoryFirstBoardState,
+            this.dataGridViewHistorySecondBoardState,
+            this.dataGridViewHistoryValue});
             this.dataGridViewHistory.DataSource = this.dataHistoryBindingSource;
-            dataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle18.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
-            dataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewHistory.DefaultCellStyle = dataGridViewCellStyle18;
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle5.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            dataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewHistory.DefaultCellStyle = dataGridViewCellStyle5;
             this.dataGridViewHistory.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewHistory.EnableHeadersVisualStyles = false;
             this.dataGridViewHistory.Location = new System.Drawing.Point(0, 0);
@@ -660,70 +664,6 @@
             this.dataGridViewHistory.Size = new System.Drawing.Size(450, 488);
             this.dataGridViewHistory.TabIndex = 1;
             this.dataGridViewHistory.TabStop = false;
-            // 
-            // No
-            // 
-            this.No.DataPropertyName = "No";
-            this.No.HeaderText = "#";
-            this.No.Name = "No";
-            this.No.ReadOnly = true;
-            this.No.Width = 20;
-            // 
-            // Turn
-            // 
-            this.Turn.DataPropertyName = "Turn";
-            this.Turn.HeaderText = "手番";
-            this.Turn.Name = "Turn";
-            this.Turn.ReadOnly = true;
-            this.Turn.Width = 50;
-            // 
-            // Hand
-            // 
-            this.Hand.DataPropertyName = "Hand";
-            this.Hand.HeaderText = "手";
-            this.Hand.Name = "Hand";
-            this.Hand.ReadOnly = true;
-            this.Hand.Width = 30;
-            // 
-            // FirstStore
-            // 
-            this.FirstStore.DataPropertyName = "FirstStore";
-            this.FirstStore.HeaderText = "先手　スコア";
-            this.FirstStore.Name = "FirstStore";
-            this.FirstStore.ReadOnly = true;
-            this.FirstStore.Width = 50;
-            // 
-            // SecondStore
-            // 
-            this.SecondStore.DataPropertyName = "SecondStore";
-            this.SecondStore.HeaderText = "後手　スコア";
-            this.SecondStore.Name = "SecondStore";
-            this.SecondStore.ReadOnly = true;
-            this.SecondStore.Width = 50;
-            // 
-            // FirstBoardState
-            // 
-            this.FirstBoardState.DataPropertyName = "FirstBoardState";
-            this.FirstBoardState.HeaderText = "先手盤面";
-            this.FirstBoardState.Name = "FirstBoardState";
-            this.FirstBoardState.ReadOnly = true;
-            this.FirstBoardState.Width = 80;
-            // 
-            // SecondBoardState
-            // 
-            this.SecondBoardState.DataPropertyName = "SecondBoardState";
-            this.SecondBoardState.HeaderText = "後手盤面";
-            this.SecondBoardState.Name = "SecondBoardState";
-            this.SecondBoardState.ReadOnly = true;
-            this.SecondBoardState.Width = 80;
-            // 
-            // Value
-            // 
-            this.Value.DataPropertyName = "Value";
-            this.Value.HeaderText = "形勢";
-            this.Value.Name = "Value";
-            this.Value.ReadOnly = true;
-            this.Value.Width = 70;
             // 
             // dataHistoryBindingSource
             // 
@@ -775,26 +715,26 @@
             // chart1
             // 
             this.chart1.BorderlineColor = System.Drawing.Color.Empty;
-            chartArea5.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)));
-            chartArea5.AxisX.LabelStyle.IsEndLabelVisible = false;
-            chartArea5.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea5.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
-            chartArea5.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
-            stripLine5.BorderColor = System.Drawing.Color.DarkRed;
-            chartArea5.AxisY.StripLines.Add(stripLine5);
-            chartArea5.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea5);
+            chartArea1.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)));
+            chartArea1.AxisX.LabelStyle.IsEndLabelVisible = false;
+            chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea1.AxisY.MajorGrid.LineColor = System.Drawing.Color.LightGray;
+            chartArea1.AxisY.MajorGrid.LineDashStyle = System.Windows.Forms.DataVisualization.Charting.ChartDashStyle.Dot;
+            stripLine1.BorderColor = System.Drawing.Color.DarkRed;
+            chartArea1.AxisY.StripLines.Add(stripLine1);
+            chartArea1.Name = "ChartArea1";
+            this.chart1.ChartAreas.Add(chartArea1);
             this.chart1.DataSource = this.dataHistoryBindingSource;
             this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.chart1.Location = new System.Drawing.Point(0, 31);
             this.chart1.Name = "chart1";
-            series5.ChartArea = "ChartArea1";
-            series5.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
-            series5.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
-            series5.Name = "Series1";
-            series5.XValueMember = "No";
-            series5.YValueMembers = "Value";
-            this.chart1.Series.Add(series5);
+            series1.ChartArea = "ChartArea1";
+            series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+            series1.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
+            series1.Name = "Series1";
+            series1.XValueMember = "No";
+            series1.YValueMembers = "Value";
+            this.chart1.Series.Add(series1);
             this.chart1.Size = new System.Drawing.Size(544, 159);
             this.chart1.TabIndex = 11;
             this.chart1.TabStop = false;
@@ -852,27 +792,27 @@
             this.dataGridViewCandidates.AutoGenerateColumns = false;
             this.dataGridViewCandidates.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.dataGridViewCandidates.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable;
-            dataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
-            dataGridViewCellStyle19.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            dataGridViewCellStyle19.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle19.SelectionBackColor = System.Drawing.Color.Transparent;
-            dataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridViewCandidates.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle19;
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(255)))), ((int)(((byte)(255)))));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Yu Gothic UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.Transparent;
+            dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewCandidates.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle6;
             this.dataGridViewCandidates.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dataGridViewCandidates.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.handDataGridViewTextBoxColumn,
             this.valuesGridViewTextBoxColumn8});
             this.dataGridViewCandidates.DataSource = this.dataCandidateBindingSource;
-            dataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle20.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
-            dataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridViewCandidates.DefaultCellStyle = dataGridViewCellStyle20;
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Yu Gothic UI", 9F);
+            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridViewCandidates.DefaultCellStyle = dataGridViewCellStyle8;
             this.dataGridViewCandidates.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewCandidates.EnableHeadersVisualStyles = false;
             this.dataGridViewCandidates.Location = new System.Drawing.Point(0, 31);
@@ -887,22 +827,6 @@
             this.dataGridViewCandidates.Size = new System.Drawing.Size(122, 159);
             this.dataGridViewCandidates.TabIndex = 13;
             this.dataGridViewCandidates.TabStop = false;
-            // 
-            // handDataGridViewTextBoxColumn
-            // 
-            this.handDataGridViewTextBoxColumn.DataPropertyName = "Hand";
-            this.handDataGridViewTextBoxColumn.HeaderText = "手";
-            this.handDataGridViewTextBoxColumn.Name = "handDataGridViewTextBoxColumn";
-            this.handDataGridViewTextBoxColumn.ReadOnly = true;
-            this.handDataGridViewTextBoxColumn.Width = 40;
-            // 
-            // valuesGridViewTextBoxColumn8
-            // 
-            this.valuesGridViewTextBoxColumn8.DataPropertyName = "Values";
-            this.valuesGridViewTextBoxColumn8.HeaderText = "形勢";
-            this.valuesGridViewTextBoxColumn8.Name = "valuesGridViewTextBoxColumn8";
-            this.valuesGridViewTextBoxColumn8.ReadOnly = true;
-            this.valuesGridViewTextBoxColumn8.Width = 80;
             // 
             // dataCandidateBindingSource
             // 
@@ -935,6 +859,94 @@
             this.statusStrip1.Size = new System.Drawing.Size(1132, 22);
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // dataGridViewHistoryNo
+            // 
+            this.dataGridViewHistoryNo.DataPropertyName = "No";
+            this.dataGridViewHistoryNo.HeaderText = "#";
+            this.dataGridViewHistoryNo.Name = "dataGridViewHistoryNo";
+            this.dataGridViewHistoryNo.ReadOnly = true;
+            this.dataGridViewHistoryNo.Width = 20;
+            // 
+            // dataGridViewHistoryThisTurn
+            // 
+            this.dataGridViewHistoryThisTurn.DataPropertyName = "ThisTurn";
+            this.dataGridViewHistoryThisTurn.HeaderText = "手番";
+            this.dataGridViewHistoryThisTurn.Name = "dataGridViewHistoryThisTurn";
+            this.dataGridViewHistoryThisTurn.ReadOnly = true;
+            this.dataGridViewHistoryThisTurn.Width = 50;
+            // 
+            // dataGridViewHistoryHand
+            // 
+            this.dataGridViewHistoryHand.DataPropertyName = "Hand";
+            this.dataGridViewHistoryHand.HeaderText = "手";
+            this.dataGridViewHistoryHand.Name = "dataGridViewHistoryHand";
+            this.dataGridViewHistoryHand.ReadOnly = true;
+            this.dataGridViewHistoryHand.Width = 30;
+            // 
+            // dataGridViewHistoryFirstStore
+            // 
+            this.dataGridViewHistoryFirstStore.DataPropertyName = "FirstStore";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewHistoryFirstStore.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridViewHistoryFirstStore.HeaderText = "先手　スコア";
+            this.dataGridViewHistoryFirstStore.Name = "dataGridViewHistoryFirstStore";
+            this.dataGridViewHistoryFirstStore.ReadOnly = true;
+            this.dataGridViewHistoryFirstStore.Width = 50;
+            // 
+            // dataGridViewHistorySecondStore
+            // 
+            this.dataGridViewHistorySecondStore.DataPropertyName = "SecondStore";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewHistorySecondStore.DefaultCellStyle = dataGridViewCellStyle3;
+            this.dataGridViewHistorySecondStore.HeaderText = "後手　スコア";
+            this.dataGridViewHistorySecondStore.Name = "dataGridViewHistorySecondStore";
+            this.dataGridViewHistorySecondStore.ReadOnly = true;
+            this.dataGridViewHistorySecondStore.Width = 50;
+            // 
+            // dataGridViewHistoryFirstBoardState
+            // 
+            this.dataGridViewHistoryFirstBoardState.DataPropertyName = "FirstBoardState";
+            this.dataGridViewHistoryFirstBoardState.HeaderText = "先手盤面";
+            this.dataGridViewHistoryFirstBoardState.Name = "dataGridViewHistoryFirstBoardState";
+            this.dataGridViewHistoryFirstBoardState.ReadOnly = true;
+            this.dataGridViewHistoryFirstBoardState.Width = 80;
+            // 
+            // dataGridViewHistorySecondBoardState
+            // 
+            this.dataGridViewHistorySecondBoardState.DataPropertyName = "SecondBoardState";
+            this.dataGridViewHistorySecondBoardState.HeaderText = "後手盤面";
+            this.dataGridViewHistorySecondBoardState.Name = "dataGridViewHistorySecondBoardState";
+            this.dataGridViewHistorySecondBoardState.ReadOnly = true;
+            this.dataGridViewHistorySecondBoardState.Width = 80;
+            // 
+            // dataGridViewHistoryValue
+            // 
+            this.dataGridViewHistoryValue.DataPropertyName = "Value";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewHistoryValue.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridViewHistoryValue.HeaderText = "形勢";
+            this.dataGridViewHistoryValue.Name = "dataGridViewHistoryValue";
+            this.dataGridViewHistoryValue.ReadOnly = true;
+            this.dataGridViewHistoryValue.Width = 70;
+            // 
+            // handDataGridViewTextBoxColumn
+            // 
+            this.handDataGridViewTextBoxColumn.DataPropertyName = "Hand";
+            this.handDataGridViewTextBoxColumn.HeaderText = "手";
+            this.handDataGridViewTextBoxColumn.Name = "handDataGridViewTextBoxColumn";
+            this.handDataGridViewTextBoxColumn.ReadOnly = true;
+            this.handDataGridViewTextBoxColumn.Width = 40;
+            // 
+            // valuesGridViewTextBoxColumn8
+            // 
+            this.valuesGridViewTextBoxColumn8.DataPropertyName = "Values";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.valuesGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle7;
+            this.valuesGridViewTextBoxColumn8.HeaderText = "形勢";
+            this.valuesGridViewTextBoxColumn8.Name = "valuesGridViewTextBoxColumn8";
+            this.valuesGridViewTextBoxColumn8.ReadOnly = true;
+            this.valuesGridViewTextBoxColumn8.Width = 80;
             // 
             // FormMain
             // 
@@ -1034,16 +1046,16 @@
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistoryNo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistoryThisTurn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistoryHand;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistoryFirstStore;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistorySecondStore;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistoryFirstBoardState;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistorySecondBoardState;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistoryValue;
         private System.Windows.Forms.DataGridViewTextBoxColumn handDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn valuesGridViewTextBoxColumn8;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.DataGridViewTextBoxColumn No;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Turn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Hand;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FirstStore;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SecondStore;
-        private System.Windows.Forms.DataGridViewTextBoxColumn FirstBoardState;
-        private System.Windows.Forms.DataGridViewTextBoxColumn SecondBoardState;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Value;
     }
 }

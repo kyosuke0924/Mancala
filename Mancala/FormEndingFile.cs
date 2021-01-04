@@ -1,10 +1,10 @@
-﻿using mancalaEngine;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using static common.Constant;
+using Common.Constant;
+using MancalaEngine;
 
 namespace Mancala
 {
@@ -46,8 +46,8 @@ namespace Mancala
         public DataEndingFile(int i,KeyValuePair<PositionKey, PositionValue> item)
         {
             No = i;
-            FirstBoardState = String.Join(" ", BitConverter.GetBytes(item.Key.BoardState0).Take(PIT_NUM));
-            SecondBoardState = String.Join(" ", BitConverter.GetBytes(item.Key.BoardState1).Take(PIT_NUM));
+            FirstBoardState = String.Join(" ", BitConverter.GetBytes(item.Key.BoardState0).Take(BoardInfo.PIT_NUM));
+            SecondBoardState = String.Join(" ", BitConverter.GetBytes(item.Key.BoardState1).Take(BoardInfo.PIT_NUM));
             Value = item.Value.Value;
             Visit = item.Value.Visit;
         }

@@ -31,5 +31,29 @@ namespace Mancala.Properties {
                 return ((bool)(this["RaiseListChangedEvents"]));
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("12")]
+        public int Depth {
+            get {
+                return ((int)(this["Depth"]));
+            }
+            set {
+                this["Depth"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int EndingFileSeedNum {
+            get {
+                return ((int)(this["EndingFileSeedNum"]));
+            }
+            set {
+                this["EndingFileSeedNum"] = value;
+            }
+        }
     }
 }

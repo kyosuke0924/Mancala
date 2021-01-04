@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using common;
-using static common.Constant;
-using mancalaEngine;
+using Common.Constant;
+using Common.BoardState;
+using MancalaEngine;
 
 namespace Mancala
 {
-    internal class Board
+    internal class BoardManager
     {
-        private MancalaEngine mancalaEngine;
+        private const int HISTORY_SIZE = BoardInfo.MAX_SEED_NUM * 3;
+
+        private MancalaEngine.Engine mancalaEngine;
         private BoardState state;
         private Stack<BoardState> history;
 
-        internal Board()
+        internal BoardManager()
         {
-            mancalaEngine = new MancalaEngine();
+            mancalaEngine = new Engine(BoardInfo.PIT_NUM);
             mancalaEngine.LoadFiles();
             Reset();
         }
@@ -34,7 +34,7 @@ namespace Mancala
         /// <summary>
         /// 一手戻す。初期局面では局面を戻せないのでNoneを返す。
         /// </summary>
-        /// <returns>戻せたかどうか</returns>
+        /// <returns>戻すことができたか</returns>
         internal bool Undo()
         {
             if (history.Count == 0) return false;
@@ -43,7 +43,7 @@ namespace Mancala
         }
 
         /// <summary>
-        /// 有効な手かを返す
+        /// ルール上有効な手ならtrueを、無効な手ならfalseを返す。
         /// </summary>
         /// <param name="idx">pit位置</param>
         /// <returns>有効な手か</returns>
@@ -53,7 +53,7 @@ namespace Mancala
         }
 
         /// <summary>
-        /// 一手進める。ルール上有効な手ならtrueを、無効な手ならfalseを返す。
+        /// 一手進める。
         /// </summary>
         /// <param name="idx">pit位置</param>
         internal void Play(int idx)
@@ -68,7 +68,16 @@ namespace Mancala
         /// <returns>現在の手番</returns>
         internal Turn GetTurn()
         {
-            return state.Turn;
+            return state.ThisTurn;
+        }
+
+        /// <summary>
+        /// 現在の手番が先手かを返す
+        /// </summary>
+        /// <returns>先手か</returns>
+        internal bool IsthisTurnFirst()
+        {
+            return state.ThisTurn == Turn.First;
         }
 
         /// <summary>
@@ -88,7 +97,7 @@ namespace Mancala
         /// <returns>seedの個数</returns>
         public byte[] GetSeedArray(Turn turn)
         {
-            return BitConverter.GetBytes(state.Seed_states[(int)turn]).Take(PIT_NUM).ToArray();
+            return BitConverter.GetBytes(state.Seed_states[(int)turn]).Take(BoardInfo.PIT_NUM).ToArray();
         }
 
         /// <summary>
@@ -103,29 +112,30 @@ namespace Mancala
         }
 
         /// <summary>
-        /// 
+        /// 推奨着手を返す
         /// </summary>
-        /// <param name="depth"></param>
-        /// <param name="explore"></param>
-        /// <returns></returns>
-        internal (Move bestMove, int?[] values) FindBestMove(int depth, bool explore)
+        /// <param name="depth">読み手の深さ</param>
+        /// <param name="explore">自己対局か</param>
+        /// <returns>推奨着手、評価値</returns>
+        internal (int? bestMoveIdx, int?[] values) FindBestMove(int depth, bool explore)
         {
-            return mancalaEngine.FindBestMove(state, depth, explore);
+            var result = mancalaEngine.FindBestMove(state, depth, explore);
+            return (result.bestMove.Pit, result.values);
         }
 
         /// <summary>
-        /// 
+        /// 終盤局面ファイルを作成する
         /// </summary>
-        /// <param name="seedNum"></param>
+        /// <param name="seedNum">最大seed数</param>
         internal void MakeEndingFile(int seedNum)
         {
             mancalaEngine.MakeEndingFile(seedNum);
         }
 
         /// <summary>
-        /// 
+        /// 終盤局面ファイルを取得する
         /// </summary>
-        /// <returns></returns>
+        /// <returns>終盤局面ファイル</returns>
         internal PositionMap GetEndingMap()
         {
             return mancalaEngine.EndingMap;
