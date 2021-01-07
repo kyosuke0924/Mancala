@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using Common.Constant;
-using MancalaEngine;
+using Mancala.Common.Constant;
+using Mancala.MancalaEngine;
 
-namespace Mancala
+namespace Mancala.Mancala
 {
     public partial class FormEndingFile : Form
     {
-        private BindingList<DataEndingFile> dataEndingFiles;
+        private readonly BindingList<DataEndingFile> dataEndingFiles;
 
 
         public FormEndingFile(PositionMap positionMap)
@@ -23,10 +23,10 @@ namespace Mancala
             textBoxCount.Text = positionMap.Header.RecordNum.ToString();
 
             int i = 0;
-            foreach (KeyValuePair<PositionKey,PositionValue> item in positionMap.PositionMapTable)
+            foreach (KeyValuePair<PositionKey, PositionValue> item in positionMap.PositionMapTable)
             {
                 i++;
-                dataEndingFiles.Add(new DataEndingFile(i,item));
+                dataEndingFiles.Add(new DataEndingFile(i, item));
             }
 
             dataGridViewEndingFile.DataSource = dataEndingFiles;
@@ -43,11 +43,11 @@ namespace Mancala
         public int Value { get; set; }
         public int Visit { get; set; }
 
-        public DataEndingFile(int i,KeyValuePair<PositionKey, PositionValue> item)
+        public DataEndingFile(int i, KeyValuePair<PositionKey, PositionValue> item)
         {
             No = i;
-            FirstBoardState = String.Join(" ", BitConverter.GetBytes(item.Key.BoardState0).Take(BoardInfo.PIT_NUM));
-            SecondBoardState = String.Join(" ", BitConverter.GetBytes(item.Key.BoardState1).Take(BoardInfo.PIT_NUM));
+            FirstBoardState = string.Join(" ", BitConverter.GetBytes(item.Key.BoardState0).Take(BoardInfo.PIT_NUM));
+            SecondBoardState = string.Join(" ", BitConverter.GetBytes(item.Key.BoardState1).Take(BoardInfo.PIT_NUM));
             Value = item.Value.Value;
             Visit = item.Value.Visit;
         }

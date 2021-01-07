@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Common.Constant;
-using Common.BoardState;
-using MancalaEngine;
+using Mancala.Common.BoardState;
+using Mancala.Common.Constant;
+using Mancala.MancalaEngine;
 
-namespace Mancala
+namespace Mancala.Mancala
 {
     internal class BoardManager
     {
         private const int HISTORY_SIZE = BoardInfo.MAX_SEED_NUM * 3;
 
-        private MancalaEngine.Engine mancalaEngine;
+        private readonly Engine mancalaEngine;
         private BoardState state;
         private Stack<BoardState> history;
 
@@ -37,7 +37,11 @@ namespace Mancala
         /// <returns>戻すことができたか</returns>
         internal bool Undo()
         {
-            if (history.Count == 0) return false;
+            if (history.Count == 0)
+            {
+                return false;
+            }
+
             state = new BoardState(history.Pop());
             return true;
         }
@@ -119,7 +123,7 @@ namespace Mancala
         /// <returns>推奨着手、評価値</returns>
         internal (int? bestMoveIdx, int?[] values) FindBestMove(int depth, bool explore)
         {
-            var result = mancalaEngine.FindBestMove(state, depth, explore);
+            (Move bestMove, int?[] values) result = mancalaEngine.FindBestMove(state, depth, explore);
             return (result.bestMove.Pit, result.values);
         }
 

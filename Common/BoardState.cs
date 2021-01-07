@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Mancala.Common.Constant;
+using System;
 using System.Linq;
-using Common.Constant;
 
-namespace Common.BoardState
+namespace Mancala.Common.BoardState
 {
     public class BoardState
-    { 
+    {
         private const long INITIAL_SEEDS = 0x040404040404; //下位バイトからstoreから遠いpitを示す。
         private const int PIT_BIT_NUM = 8;
         private const long PIT_BIT_MASK = 0xff;
@@ -136,7 +136,7 @@ namespace Common.BoardState
             Seed_states = (long[])boardState.Seed_states.Clone();
         }
 
-        public BoardState(int[] firstSeeds,int[] secondSeeds) :this()
+        public BoardState(int[] firstSeeds, int[] secondSeeds) : this()
         {
             byte[] firstSeedsBytes = new byte[8];
             byte[] secondSeedsBytes = new byte[8];
@@ -145,6 +145,7 @@ namespace Common.BoardState
                 firstSeedsBytes[i] = (byte)firstSeeds[i];
                 secondSeedsBytes[i] = (byte)secondSeeds[i];
             }
+
             Seed_states = new long[] { BitConverter.ToInt64(firstSeedsBytes, 0), BitConverter.ToInt64(secondSeedsBytes, 0) };
         }
 
@@ -172,7 +173,7 @@ namespace Common.BoardState
         /// ゲームが終了しているかどうかを返す。
         /// </summary>
         /// <returns>終了しているか</returns>
-        public Boolean IsOver()
+        public bool IsOver()
         {
             return Seed_states[(int)Turn.First] == 0 | Seed_states[(int)Turn.Second] == 0;
         }
@@ -216,7 +217,8 @@ namespace Common.BoardState
                 }
             }
 
-            if (IsOver()) //終局処理
+            //終局処理
+            if (IsOver()) 
             {
                 Stores[(int)ThisTurn] += SumSeeds(ThisTurn);
                 Stores[(int)opponent] += SumSeeds(opponent);
@@ -224,10 +226,9 @@ namespace Common.BoardState
                 Seed_states[(int)opponent] = EMPTY_SEEDS;
             }
 
-            if (lastIdx != BoardInfo.PIT_NUM) //ピッタリゴール
-            {
-                ThisTurn = opponent;
-            }
+            //ピッタリゴール
+            if (lastIdx != BoardInfo.PIT_NUM) { ThisTurn = opponent; }
+
         }
 
         /// <summary>

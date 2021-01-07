@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Mancala.Common.BoardState;
+using Mancala.Common.Constant;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Common.Constant;
-using Common.BoardState;
 
-namespace MancalaEngine
+namespace Mancala.MancalaEngine
 {
     internal class Evaluator
     {
@@ -50,7 +50,7 @@ namespace MancalaEngine
             {
                 int idx = 0;
                 int readByte = 4;
-               
+
                 for (int i = 0; i < PATTERN_NUM; i++)
                 {
                     for (int j = 0; j < PATTERN_SIZE; j++)
@@ -59,6 +59,7 @@ namespace MancalaEngine
                         fs.Read(data, idx, readByte);
                         patternValues[i][j] = BitConverter.ToInt32(data, 0);
                     }
+
                 }
             }
             catch (Exception)
@@ -73,10 +74,10 @@ namespace MancalaEngine
 
         internal int Evaluate(BoardState boardState)
         {
-            var turn = boardState.ThisTurn;
-            var opponent = boardState.GetOpponentTurn();
-            var seeds = BitConverter.GetBytes(boardState.Seed_states[(int)turn]);
-            var opponent_seeds = BitConverter.GetBytes(boardState.Seed_states[(int)opponent]);
+            Turn turn = boardState.ThisTurn;
+            Turn opponent = boardState.GetOpponentTurn();
+            byte[] seeds = BitConverter.GetBytes(boardState.Seed_states[(int)turn]);
+            byte[] opponent_seeds = BitConverter.GetBytes(boardState.Seed_states[(int)opponent]);
 
             int value = 0;
 

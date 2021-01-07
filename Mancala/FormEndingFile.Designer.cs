@@ -1,4 +1,4 @@
-﻿namespace Mancala
+﻿namespace Mancala.Mancala
 {
     partial class FormEndingFile
     {
