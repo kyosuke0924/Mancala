@@ -53,8 +53,7 @@
   </application>
   -->
   <!-- Windows のコモン コントロールとダイアログのテーマを有効にします (Windows XP 以降) -->
-  <!--
-  <dependency>
+   <dependency>
     <dependentAssembly>
       <assemblyIdentity
           type="win32"
@@ -66,5 +65,4 @@
         />
     </dependentAssembly>
   </dependency>
-  -->
 </assembly>

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Mancala.Properties {
+namespace Mancala.Mancala.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

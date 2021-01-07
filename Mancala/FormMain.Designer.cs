@@ -1,4 +1,4 @@
-﻿namespace Mancala
+﻿namespace Mancala.Mancala
 {
     partial class FormMain
     {
@@ -31,14 +31,14 @@
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.StripLine stripLine1 = new System.Windows.Forms.DataVisualization.Charting.StripLine();
             System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panel1 = new System.Windows.Forms.Panel();
             this.labelN = new System.Windows.Forms.Label();
@@ -80,21 +80,6 @@
             this.panel3 = new System.Windows.Forms.Panel();
             this.panel4 = new System.Windows.Forms.Panel();
             this.dataGridViewHistory = new System.Windows.Forms.DataGridView();
-            this.dataHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.label1 = new System.Windows.Forms.Label();
-            this.panel6 = new System.Windows.Forms.Panel();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.chart1 = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label15 = new System.Windows.Forms.Label();
-            this.panel7 = new System.Windows.Forms.Panel();
-            this.dataGridViewCandidates = new System.Windows.Forms.DataGridView();
-            this.dataCandidateBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.label14 = new System.Windows.Forms.Label();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.dataGridViewHistoryNo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewHistoryThisTurn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewHistoryHand = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -103,8 +88,23 @@
             this.dataGridViewHistoryFirstBoardState = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewHistorySecondBoardState = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dataGridViewHistoryValue = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataHistoryBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.chartSituation = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.dataGridViewCandidates = new System.Windows.Forms.DataGridView();
             this.handDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.valuesGridViewTextBoxColumn8 = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.dataCandidateBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.label14 = new System.Windows.Forms.Label();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.panel1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -115,7 +115,7 @@
             this.panel5.SuspendLayout();
             this.panel6.SuspendLayout();
             this.panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartSituation)).BeginInit();
             this.panel10.SuspendLayout();
             this.panel7.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewCandidates)).BeginInit();
@@ -665,6 +665,76 @@
             this.dataGridViewHistory.TabIndex = 1;
             this.dataGridViewHistory.TabStop = false;
             // 
+            // dataGridViewHistoryNo
+            // 
+            this.dataGridViewHistoryNo.DataPropertyName = "No";
+            this.dataGridViewHistoryNo.HeaderText = "#";
+            this.dataGridViewHistoryNo.Name = "dataGridViewHistoryNo";
+            this.dataGridViewHistoryNo.ReadOnly = true;
+            this.dataGridViewHistoryNo.Width = 20;
+            // 
+            // dataGridViewHistoryThisTurn
+            // 
+            this.dataGridViewHistoryThisTurn.DataPropertyName = "ThisTurn";
+            this.dataGridViewHistoryThisTurn.HeaderText = "手番";
+            this.dataGridViewHistoryThisTurn.Name = "dataGridViewHistoryThisTurn";
+            this.dataGridViewHistoryThisTurn.ReadOnly = true;
+            this.dataGridViewHistoryThisTurn.Width = 50;
+            // 
+            // dataGridViewHistoryHand
+            // 
+            this.dataGridViewHistoryHand.DataPropertyName = "Hand";
+            this.dataGridViewHistoryHand.HeaderText = "手";
+            this.dataGridViewHistoryHand.Name = "dataGridViewHistoryHand";
+            this.dataGridViewHistoryHand.ReadOnly = true;
+            this.dataGridViewHistoryHand.Width = 30;
+            // 
+            // dataGridViewHistoryFirstStore
+            // 
+            this.dataGridViewHistoryFirstStore.DataPropertyName = "FirstStore";
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewHistoryFirstStore.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridViewHistoryFirstStore.HeaderText = "先手　スコア";
+            this.dataGridViewHistoryFirstStore.Name = "dataGridViewHistoryFirstStore";
+            this.dataGridViewHistoryFirstStore.ReadOnly = true;
+            this.dataGridViewHistoryFirstStore.Width = 50;
+            // 
+            // dataGridViewHistorySecondStore
+            // 
+            this.dataGridViewHistorySecondStore.DataPropertyName = "SecondStore";
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewHistorySecondStore.DefaultCellStyle = dataGridViewCellStyle3;
+            this.dataGridViewHistorySecondStore.HeaderText = "後手　スコア";
+            this.dataGridViewHistorySecondStore.Name = "dataGridViewHistorySecondStore";
+            this.dataGridViewHistorySecondStore.ReadOnly = true;
+            this.dataGridViewHistorySecondStore.Width = 50;
+            // 
+            // dataGridViewHistoryFirstBoardState
+            // 
+            this.dataGridViewHistoryFirstBoardState.DataPropertyName = "FirstBoardState";
+            this.dataGridViewHistoryFirstBoardState.HeaderText = "先手盤面";
+            this.dataGridViewHistoryFirstBoardState.Name = "dataGridViewHistoryFirstBoardState";
+            this.dataGridViewHistoryFirstBoardState.ReadOnly = true;
+            this.dataGridViewHistoryFirstBoardState.Width = 80;
+            // 
+            // dataGridViewHistorySecondBoardState
+            // 
+            this.dataGridViewHistorySecondBoardState.DataPropertyName = "SecondBoardState";
+            this.dataGridViewHistorySecondBoardState.HeaderText = "後手盤面";
+            this.dataGridViewHistorySecondBoardState.Name = "dataGridViewHistorySecondBoardState";
+            this.dataGridViewHistorySecondBoardState.ReadOnly = true;
+            this.dataGridViewHistorySecondBoardState.Width = 80;
+            // 
+            // dataGridViewHistoryValue
+            // 
+            this.dataGridViewHistoryValue.DataPropertyName = "Value";
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.dataGridViewHistoryValue.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridViewHistoryValue.HeaderText = "形勢";
+            this.dataGridViewHistoryValue.Name = "dataGridViewHistoryValue";
+            this.dataGridViewHistoryValue.ReadOnly = true;
+            this.dataGridViewHistoryValue.Width = 70;
+            // 
             // dataHistoryBindingSource
             // 
             this.dataHistoryBindingSource.DataSource = typeof(Mancala.FormMain.DataHistory);
@@ -704,7 +774,7 @@
             // panel8
             // 
             this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel8.Controls.Add(this.chart1);
+            this.panel8.Controls.Add(this.chartSituation);
             this.panel8.Controls.Add(this.panel10);
             this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel8.Location = new System.Drawing.Point(126, 0);
@@ -712,9 +782,9 @@
             this.panel8.Size = new System.Drawing.Size(548, 194);
             this.panel8.TabIndex = 12;
             // 
-            // chart1
+            // chartSituation
             // 
-            this.chart1.BorderlineColor = System.Drawing.Color.Empty;
+            this.chartSituation.BorderlineColor = System.Drawing.Color.Empty;
             chartArea1.AxisX.LabelAutoFitStyle = ((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles)((System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.IncreaseFont | System.Windows.Forms.DataVisualization.Charting.LabelAutoFitStyles.DecreaseFont)));
             chartArea1.AxisX.LabelStyle.IsEndLabelVisible = false;
             chartArea1.AxisX.MajorGrid.LineColor = System.Drawing.Color.LightGray;
@@ -723,22 +793,22 @@
             stripLine1.BorderColor = System.Drawing.Color.DarkRed;
             chartArea1.AxisY.StripLines.Add(stripLine1);
             chartArea1.Name = "ChartArea1";
-            this.chart1.ChartAreas.Add(chartArea1);
-            this.chart1.DataSource = this.dataHistoryBindingSource;
-            this.chart1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.chart1.Location = new System.Drawing.Point(0, 31);
-            this.chart1.Name = "chart1";
+            this.chartSituation.ChartAreas.Add(chartArea1);
+            this.chartSituation.DataSource = this.dataHistoryBindingSource;
+            this.chartSituation.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chartSituation.Location = new System.Drawing.Point(0, 31);
+            this.chartSituation.Name = "chartSituation";
             series1.ChartArea = "ChartArea1";
             series1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
             series1.MarkerStyle = System.Windows.Forms.DataVisualization.Charting.MarkerStyle.Circle;
             series1.Name = "Series1";
             series1.XValueMember = "No";
             series1.YValueMembers = "Value";
-            this.chart1.Series.Add(series1);
-            this.chart1.Size = new System.Drawing.Size(544, 159);
-            this.chart1.TabIndex = 11;
-            this.chart1.TabStop = false;
-            this.chart1.Text = "chart1";
+            this.chartSituation.Series.Add(series1);
+            this.chartSituation.Size = new System.Drawing.Size(544, 159);
+            this.chartSituation.TabIndex = 11;
+            this.chartSituation.TabStop = false;
+            this.chartSituation.Text = "chartSituation";
             // 
             // panel10
             // 
@@ -828,6 +898,24 @@
             this.dataGridViewCandidates.TabIndex = 13;
             this.dataGridViewCandidates.TabStop = false;
             // 
+            // handDataGridViewTextBoxColumn
+            // 
+            this.handDataGridViewTextBoxColumn.DataPropertyName = "Hand";
+            this.handDataGridViewTextBoxColumn.HeaderText = "手";
+            this.handDataGridViewTextBoxColumn.Name = "handDataGridViewTextBoxColumn";
+            this.handDataGridViewTextBoxColumn.ReadOnly = true;
+            this.handDataGridViewTextBoxColumn.Width = 40;
+            // 
+            // valuesGridViewTextBoxColumn8
+            // 
+            this.valuesGridViewTextBoxColumn8.DataPropertyName = "Values";
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
+            this.valuesGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle7;
+            this.valuesGridViewTextBoxColumn8.HeaderText = "形勢";
+            this.valuesGridViewTextBoxColumn8.Name = "valuesGridViewTextBoxColumn8";
+            this.valuesGridViewTextBoxColumn8.ReadOnly = true;
+            this.valuesGridViewTextBoxColumn8.Width = 80;
+            // 
             // dataCandidateBindingSource
             // 
             this.dataCandidateBindingSource.DataSource = typeof(Mancala.FormMain.DataCandidate);
@@ -860,94 +948,6 @@
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
             // 
-            // dataGridViewHistoryNo
-            // 
-            this.dataGridViewHistoryNo.DataPropertyName = "No";
-            this.dataGridViewHistoryNo.HeaderText = "#";
-            this.dataGridViewHistoryNo.Name = "dataGridViewHistoryNo";
-            this.dataGridViewHistoryNo.ReadOnly = true;
-            this.dataGridViewHistoryNo.Width = 20;
-            // 
-            // dataGridViewHistoryThisTurn
-            // 
-            this.dataGridViewHistoryThisTurn.DataPropertyName = "ThisTurn";
-            this.dataGridViewHistoryThisTurn.HeaderText = "手番";
-            this.dataGridViewHistoryThisTurn.Name = "dataGridViewHistoryThisTurn";
-            this.dataGridViewHistoryThisTurn.ReadOnly = true;
-            this.dataGridViewHistoryThisTurn.Width = 50;
-            // 
-            // dataGridViewHistoryHand
-            // 
-            this.dataGridViewHistoryHand.DataPropertyName = "Hand";
-            this.dataGridViewHistoryHand.HeaderText = "手";
-            this.dataGridViewHistoryHand.Name = "dataGridViewHistoryHand";
-            this.dataGridViewHistoryHand.ReadOnly = true;
-            this.dataGridViewHistoryHand.Width = 30;
-            // 
-            // dataGridViewHistoryFirstStore
-            // 
-            this.dataGridViewHistoryFirstStore.DataPropertyName = "FirstStore";
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewHistoryFirstStore.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dataGridViewHistoryFirstStore.HeaderText = "先手　スコア";
-            this.dataGridViewHistoryFirstStore.Name = "dataGridViewHistoryFirstStore";
-            this.dataGridViewHistoryFirstStore.ReadOnly = true;
-            this.dataGridViewHistoryFirstStore.Width = 50;
-            // 
-            // dataGridViewHistorySecondStore
-            // 
-            this.dataGridViewHistorySecondStore.DataPropertyName = "SecondStore";
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewHistorySecondStore.DefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridViewHistorySecondStore.HeaderText = "後手　スコア";
-            this.dataGridViewHistorySecondStore.Name = "dataGridViewHistorySecondStore";
-            this.dataGridViewHistorySecondStore.ReadOnly = true;
-            this.dataGridViewHistorySecondStore.Width = 50;
-            // 
-            // dataGridViewHistoryFirstBoardState
-            // 
-            this.dataGridViewHistoryFirstBoardState.DataPropertyName = "FirstBoardState";
-            this.dataGridViewHistoryFirstBoardState.HeaderText = "先手盤面";
-            this.dataGridViewHistoryFirstBoardState.Name = "dataGridViewHistoryFirstBoardState";
-            this.dataGridViewHistoryFirstBoardState.ReadOnly = true;
-            this.dataGridViewHistoryFirstBoardState.Width = 80;
-            // 
-            // dataGridViewHistorySecondBoardState
-            // 
-            this.dataGridViewHistorySecondBoardState.DataPropertyName = "SecondBoardState";
-            this.dataGridViewHistorySecondBoardState.HeaderText = "後手盤面";
-            this.dataGridViewHistorySecondBoardState.Name = "dataGridViewHistorySecondBoardState";
-            this.dataGridViewHistorySecondBoardState.ReadOnly = true;
-            this.dataGridViewHistorySecondBoardState.Width = 80;
-            // 
-            // dataGridViewHistoryValue
-            // 
-            this.dataGridViewHistoryValue.DataPropertyName = "Value";
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.dataGridViewHistoryValue.DefaultCellStyle = dataGridViewCellStyle4;
-            this.dataGridViewHistoryValue.HeaderText = "形勢";
-            this.dataGridViewHistoryValue.Name = "dataGridViewHistoryValue";
-            this.dataGridViewHistoryValue.ReadOnly = true;
-            this.dataGridViewHistoryValue.Width = 70;
-            // 
-            // handDataGridViewTextBoxColumn
-            // 
-            this.handDataGridViewTextBoxColumn.DataPropertyName = "Hand";
-            this.handDataGridViewTextBoxColumn.HeaderText = "手";
-            this.handDataGridViewTextBoxColumn.Name = "handDataGridViewTextBoxColumn";
-            this.handDataGridViewTextBoxColumn.ReadOnly = true;
-            this.handDataGridViewTextBoxColumn.Width = 40;
-            // 
-            // valuesGridViewTextBoxColumn8
-            // 
-            this.valuesGridViewTextBoxColumn8.DataPropertyName = "Values";
-            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight;
-            this.valuesGridViewTextBoxColumn8.DefaultCellStyle = dataGridViewCellStyle7;
-            this.valuesGridViewTextBoxColumn8.HeaderText = "形勢";
-            this.valuesGridViewTextBoxColumn8.Name = "valuesGridViewTextBoxColumn8";
-            this.valuesGridViewTextBoxColumn8.ReadOnly = true;
-            this.valuesGridViewTextBoxColumn8.Width = 80;
-            // 
             // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
@@ -977,7 +977,7 @@
             this.panel5.PerformLayout();
             this.panel6.ResumeLayout(false);
             this.panel8.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.chart1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.chartSituation)).EndInit();
             this.panel10.ResumeLayout(false);
             this.panel10.PerformLayout();
             this.panel7.ResumeLayout(false);
@@ -1045,7 +1045,7 @@
         private System.Windows.Forms.Label label14;
         private System.Windows.Forms.Panel panel10;
         private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.DataVisualization.Charting.Chart chart1;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartSituation;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistoryNo;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewHistoryThisTurn;

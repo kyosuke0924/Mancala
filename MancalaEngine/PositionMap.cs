@@ -1,26 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using Mancala.Common.BoardState;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using static System.BitConverter;
-using Common.BoardState;
 
-namespace MancalaEngine
+namespace Mancala.MancalaEngine
 {
 
     public struct PositionKey
     {
         public long BoardState0 { get; }
         public long BoardState1 { get; }
-
-        internal PositionKey(long boardState0, long boardState1)
-        {
-            BoardState0 = boardState0;
-            BoardState1 = boardState1;
-        }
-        internal byte[] ToLeBytes()
-        {
-            return (byte[])GetBytes(BoardState0).Concat(GetBytes(BoardState1)).ToArray().Clone();
-        }
 
         public override bool Equals(object obj)
         {
@@ -31,10 +21,21 @@ namespace MancalaEngine
 
         public override int GetHashCode()
         {
-            var hashCode = -1877348453;
+            int hashCode = -1877348453;
             hashCode = hashCode * -1521134295 + BoardState0.GetHashCode();
             hashCode = hashCode * -1521134295 + BoardState1.GetHashCode();
             return hashCode;
+        }
+
+        internal PositionKey(long boardState0, long boardState1)
+        {
+            BoardState0 = boardState0;
+            BoardState1 = boardState1;
+        }
+
+        internal byte[] ToLeBytes()
+        {
+            return (byte[])GetBytes(BoardState0).Concat(GetBytes(BoardState1)).ToArray().Clone();
         }
 
         internal PositionKey(byte[] vs) : this(ToInt64(vs, 0), ToInt64(vs, 8)) { }
@@ -42,8 +43,8 @@ namespace MancalaEngine
 
     public struct PositionValue
     {
-        public int Value { get;}
-        public int Visit { get;}
+        public int Value { get; }
+        public int Visit { get; }
 
         internal PositionValue(int value, int visit)
         {
@@ -56,13 +57,13 @@ namespace MancalaEngine
             return (byte[])GetBytes(Value).Concat(GetBytes(Visit)).ToArray().Clone();
         }
 
-        internal PositionValue(byte[] vs) : this(ToInt32(vs, 0), ToInt32(vs, 4)) { } 
+        internal PositionValue(byte[] vs) : this(ToInt32(vs, 0), ToInt32(vs, 4)) { }
     }
 
     public struct PositionFileHeader
     {
         public uint Version { get; }
-        public uint RecordNum { get;}
+        public uint RecordNum { get; }
 
         internal PositionFileHeader(uint version, uint recordNum)
         {
@@ -75,14 +76,15 @@ namespace MancalaEngine
             return (byte[])GetBytes(Version).Concat(GetBytes(RecordNum)).ToArray().Clone();
         }
 
-        internal PositionFileHeader(byte[] vs) :this(ToUInt32(vs, 0), ToUInt32(vs, 4)) { } 
+        internal PositionFileHeader(byte[] vs) : this(ToUInt32(vs, 0), ToUInt32(vs, 4)) { }
     }
 
     public class PositionMap
     {
-        private readonly int valuePerSeed;
         public PositionFileHeader Header { get; private set; }
-        public Dictionary<PositionKey,PositionValue> PositionMapTable { get; private set; }
+        public Dictionary<PositionKey, PositionValue> PositionMapTable { get; private set; }
+
+        private readonly int valuePerSeed;
 
         internal PositionMap(int valuePerSeed)
         {
@@ -92,7 +94,7 @@ namespace MancalaEngine
         }
 
         internal void Load(string filePath)
-        {          
+        {
             using (FileStream fs = new System.IO.FileStream(filePath, FileMode.Open))
             {
                 int idx = 0;
@@ -119,18 +121,18 @@ namespace MancalaEngine
         {
             using (FileStream fs = new FileStream(filePath, FileMode.Create))
             {
-                var header = new PositionFileHeader(1, (uint)PositionMapTable.Count);
+                PositionFileHeader header = new PositionFileHeader(1, (uint)PositionMapTable.Count);
                 int idx = 0;
 
-                var headerBytes = header.ToLeBytes();
-                fs.Write(headerBytes,idx,headerBytes.Length);
+                byte[] headerBytes = header.ToLeBytes();
+                fs.Write(headerBytes, idx, headerBytes.Length);
 
-                foreach (var positionMap in PositionMapTable)
+                foreach (KeyValuePair<PositionKey, PositionValue> positionMap in PositionMapTable)
                 {
-                    var positionMapKeyBytes = positionMap.Key.ToLeBytes();
-                    var positionMapValueBytes = positionMap.Value.ToLeBytes();
-                    fs.Write(positionMapKeyBytes,idx,positionMapKeyBytes.Length);
-                    fs.Write(positionMapValueBytes,idx,positionMapValueBytes.Length);
+                    byte[] positionMapKeyBytes = positionMap.Key.ToLeBytes();
+                    byte[] positionMapValueBytes = positionMap.Value.ToLeBytes();
+                    fs.Write(positionMapKeyBytes, idx, positionMapKeyBytes.Length);
+                    fs.Write(positionMapValueBytes, idx, positionMapValueBytes.Length);
                 }
             }
         }
@@ -142,9 +144,9 @@ namespace MancalaEngine
 
         internal PositionValue? GetPositionValue(BoardState boardState)
         {
-            var turn = boardState.ThisTurn;
-            var opponent = boardState.GetOpponentTurn();
-            var key = new PositionKey(boardState.Seed_states[(int)turn], boardState.Seed_states[(int)opponent]) ;
+            Common.Constant.Turn turn = boardState.ThisTurn;
+            Common.Constant.Turn opponent = boardState.GetOpponentTurn();
+            PositionKey key = new PositionKey(boardState.Seed_states[(int)turn], boardState.Seed_states[(int)opponent]);
 
             if (PositionMapTable.ContainsKey(key))
             {
@@ -161,17 +163,20 @@ namespace MancalaEngine
             }
         }
 
-        internal void Add(BoardState boardState,int value)
+        internal void Add(BoardState boardState, int value)
         {
-            var turn = boardState.ThisTurn;
-            var opponent = boardState.GetOpponentTurn();
-            var key = new PositionKey(boardState.Seed_states[(int)turn], boardState.Seed_states[(int)opponent]);
-            var positionValue = GetPositionValue(boardState);
+            Common.Constant.Turn turn = boardState.ThisTurn;
+            Common.Constant.Turn opponent = boardState.GetOpponentTurn();
+            PositionKey key = new PositionKey(boardState.Seed_states[(int)turn], boardState.Seed_states[(int)opponent]);
+            PositionValue? positionValue = GetPositionValue(boardState);
 
             int visit = 0;
-            if (positionValue != null) visit = positionValue.Value.Visit;
+            if (positionValue != null)
+            {
+                visit = positionValue.Value.Visit;
+            }
 
-            var newPositionValue = new PositionValue
+            PositionValue newPositionValue = new PositionValue
                 (value - (boardState.Stores[(int)turn] - boardState.Stores[(int)opponent]) * valuePerSeed, visit += 1);
 
             PositionMapTable.Add(key, newPositionValue);
