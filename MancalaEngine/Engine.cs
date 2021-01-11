@@ -277,7 +277,10 @@ namespace Mancala.MancalaEngine
 
             foreach (int i in moves)
             {
-                if (!boardState.CanPlay(i)) continue;
+                if (!boardState.CanPlay(i))
+                {
+                    continue;
+                }
 
                 stackBoardStates.Push(new BoardState(boardState));
                 boardState.Play(i);
@@ -319,8 +322,15 @@ namespace Mancala.MancalaEngine
                 {
                     bestMove = new Move(i, value);
                     maxValue = value;
-                    if (value >= upper) return bestMove;
-                    if (maxValue > lowerValue) lowerValue = maxValue;
+                    if (value >= upper)
+                    {
+                        return bestMove;
+                    }
+
+                    if (maxValue > lowerValue)
+                    {
+                        lowerValue = maxValue;
+                    }
                 }
             }
 

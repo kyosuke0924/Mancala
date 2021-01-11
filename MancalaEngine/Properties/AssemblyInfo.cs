@@ -7,9 +7,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MancalaEngine")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("MancalaEngine")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCompany("Kyosuke0924")]
+[assembly: AssemblyProduct("Mancala")]
+[assembly: AssemblyCopyright("Copyright ©  2021 Kyosuke0924")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

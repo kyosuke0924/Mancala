@@ -218,7 +218,7 @@ namespace Mancala.Common.BoardState
             }
 
             //終局処理
-            if (IsOver()) 
+            if (IsOver())
             {
                 Stores[(int)ThisTurn] += SumSeeds(ThisTurn);
                 Stores[(int)opponent] += SumSeeds(opponent);

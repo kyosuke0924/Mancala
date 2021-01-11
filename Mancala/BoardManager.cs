@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Mancala.Common.BoardState;
+﻿using Mancala.Common.BoardState;
 using Mancala.Common.Constant;
 using Mancala.MancalaEngine;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Mancala.Mancala
 {

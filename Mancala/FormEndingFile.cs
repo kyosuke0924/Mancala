@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Mancala.Common.Constant;
+using Mancala.MancalaEngine;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using Mancala.Common.Constant;
-using Mancala.MancalaEngine;
 
 namespace Mancala.Mancala
 {
